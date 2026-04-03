@@ -1,9 +1,9 @@
 ---
 gsd_state_version: 1.0
 milestone: v1.1
-milestone_name: ""
+milestone_name: reliability-coverage
 status: planning
-last_updated: "2026-04-03T15:30:00Z"
+last_updated: "2026-04-03T15:45:00Z"
 progress:
   total_phases: 0
   completed_phases: 0
@@ -15,10 +15,10 @@ progress:
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-04-03 after v1.0)
+See: `.planning/PROJECT.md` (updated 2026-04-03)
 
 **Core value:** Produce a ready-to-use `job_opportunities.md` with 150+ verified remote fresher job links, Rust/Solana/TS flagged
-**Current focus:** Planning next milestone (v1.1 or v2.0)
+**Current focus:** v1.1 — closing all gaps from v1.0 audit
 
 ## Shipped
 
@@ -38,7 +38,7 @@ See: `.planning/PROJECT.md` (updated 2026-04-03 after v1.0)
 
 ## Blockers
 
-None — v1.0 milestone complete.
+None.
 
 ## Tech Debt Carrying Forward
 

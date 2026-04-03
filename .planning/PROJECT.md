@@ -2,13 +2,26 @@
 
 ## What This Is
 
-A CLI tool published as `@pantha704/job-finder` that scrapes 16+ job boards (Internshala, Wellfound, LinkedIn, Cutshort, Solana Jobs, Web3.career, etc.) and outputs a curated, de-duplicated markdown checklist (`job_opportunities.md`) with AI-powered match scoring and application tracking. Purpose-built for Pratham Jaiswal — a 3rd-year BTech student in Kolkata, India — specializing in Rust, TypeScript, Next.js, and Solana/Web3.
+A CLI tool published as `@pantha704/job-finder` that scrapes 16+ job boards and outputs a curated, de-duplicated markdown checklist (`job_opportunities.md`) with AI-powered match scoring. Purpose-built for Pratham Jaiswal — a 3rd-year BTech student in Kolkata, India — specializing in Rust, TypeScript, Next.js, and Solana/Web3.
 
 ## Core Value
 
 Produce a ready-to-use `job_opportunities.md` with 150+ verified, remote-friendly, fresher/entry-level job links that Pratham can track and apply to — with high-relevance Rust/Solana/TypeScript/Next.js matches flagged prominently.
 
 **Shipped v1.0:** 254 jobs found, 22 HIGH MATCH, published to npm.
+
+## Current Milestone: v1.1 — Reliability & Coverage
+
+**Goal:** Close every gap from the v1.0 audit — unblock all 6 blocked sources, add a unit test suite, verify the full multi-source pipeline, and complete traceability documentation.
+
+**Target features:**
+- Unit test suite for utils, browser, filter, and dedup modules
+- Wellfound: Camoufox anti-detect bypass of DataDome CAPTCHA
+- LinkedIn: Auth cookie injection to bypass 429 rate-limit
+- Himalayas & Cutshort: Playwright `fetchRendered` for non-zero SPA results
+- Remotive, Jobicy, WeWorkRemotely: Headless browser bypass of 403 anti-bot
+- Full pipeline verification: ≥150 jobs with all tiers, zero undefined fields
+- Complete REQUIREMENTS.md traceability for all phases
 
 ## Requirements
 
