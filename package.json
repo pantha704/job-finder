@@ -1,6 +1,6 @@
 {
   "name": "@pantha704/job-finder",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Fresher-focused remote job aggregator CLI — scrapes 14 job boards for Rust, TypeScript, Solana & Web3 remote roles",
   "module": "index.ts",
   "type": "module",
