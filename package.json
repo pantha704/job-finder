@@ -1,7 +1,7 @@
 {
   "name": "@pantha704/job-finder",
   "version": "1.0.0",
-  "description": "Fresher-focused remote job aggregator with Rust/Solana superpowers",
+  "description": "Fresher-focused remote job aggregator CLI — scrapes 14 job boards for Rust, TypeScript, Solana & Web3 remote roles",
   "module": "index.ts",
   "type": "module",
   "private": false,
@@ -9,12 +9,37 @@
     "job-finder": "./dist/cli.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
+  "keywords": [
+    "job-finder",
+    "remote-jobs",
+    "fresher",
+    "internship",
+    "web3",
+    "solana",
+    "rust",
+    "typescript",
+    "job-scraper",
+    "india",
+    "cli"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pantha704/job-finder"
+  },
+  "homepage": "https://github.com/pantha704/job-finder#readme",
+  "license": "MIT",
+  "engines": {
+    "bun": ">=1.0.0"
+  },
   "scripts": {
     "build": "bun build src/cli.ts --outdir dist --target bun --external playwright --external playwright-core --external electron --external chromium-bidi --external figlet",
     "prepublishOnly": "bun run build",
-    "start": "bun run src/cli.ts"
+    "start": "bun run src/cli.ts",
+    "dev": "bun run src/cli.ts"
   },
   "devDependencies": {
     "@types/bun": "^1.3.11",
