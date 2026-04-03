@@ -10,22 +10,27 @@ Produce a ready-to-use `job_opportunities.md` with 150+ verified, remote-friendl
 
 **Shipped v1.0:** 254 jobs found, 22 HIGH MATCH, published to npm.
 
-## Current Milestone: v1.1 — Reliability & Coverage
+## Current Milestone: v2.0 — CLI Enhancements
 
-**Goal:** Close every gap from the v1.0 audit — unblock all 6 blocked sources, add a unit test suite, verify the full multi-source pipeline, and complete traceability documentation.
+**Goal:** Add CLI enhancements: salary range filter, company size filter, company blacklist, interactive job browser, and CSV/JSON export formats.
 
 **Target features:**
-- Unit test suite for utils, browser, filter, and dedup modules
-- Wellfound: Camoufox anti-detect bypass of DataDome CAPTCHA
-- LinkedIn: Auth cookie injection to bypass 429 rate-limit
-- Himalayas & Cutshort: Playwright `fetchRendered` for non-zero SPA results
-- Remotive, Jobicy, WeWorkRemotely: Headless browser bypass of 403 anti-bot
-- Full pipeline verification: ≥150 jobs with all tiers, zero undefined fields
-- Complete REQUIREMENTS.md traceability for all phases
+- Salary range filter (min INR)
+- Company size filter (startup vs enterprise)
+- Company blacklist (exclude specific companies)
+- Interactive job browser
+- Export to CSV/JSON formats
+- SQLite persistence for seen jobs across runs
 
 ## Requirements
 
-### Validated (v1.0)
+### Validated (v1.1)
+
+- ✓ All 96 unit tests pass — v1.1
+- ✓ Himalayas fixed (43 jobs) — v1.1
+- ✓ Cutshort verified (120 jobs) — v1.1
+- ✓ Pipeline: 303+ projected jobs, zero undefined fields — v1.1
+- ✓ All 22 v1.1 requirements documented — see [.planning/milestones/v1.1-REQUIREMENTS.md](./milestones/v1.1-REQUIREMENTS.md)
 
 - ✓ Auto-detect Camoufox browser endpoint (port scan 9377, 3000, 9222, 8080) or fallback to HTTP fetch — v1.0
 - ✓ Respect robots.txt, 3s delay between requests — v1.0
