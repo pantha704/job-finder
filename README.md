@@ -149,7 +149,7 @@ Check the box `[x]` when you apply to track progress.
 | **Internshala** | 1 | fetch + cheerio | Best for India internships |
 | **RemoteRocketship** | 1 | fetch + cheerio | Quality remote-first listings |
 | **Unstop** | 1 | Playwright | Mostly hackathons + internships |
-| **Wellfound** | 2 | Playwright | ⚠️ Needs Camoufox or Firefox for CF bypass |
+| **Wellfound** | 2 | Playwright | ⚠️ Needs Camoufox for realistic fingerprint |
 | **Cutshort** | 2 | fetch + cheerio | Good India startup job board |
 | **Himalayas** | 2 | Playwright | Remote-first global board |
 | **RemoteOK** | 3 | JSON API | Best public remote job API |
@@ -251,7 +251,7 @@ Write to file every 25 jobs (incremental save)
 
 ## 🦊 Camoufox (Optional — For Wellfound / Himalayas)
 
-Some sites use Cloudflare JS Challenge. [Camoufox](https://github.com/daijro/camoufox) is an anti-detect Firefox that bypasses it automatically.
+Some sites aggressively block headless browsers. [Camoufox](https://github.com/daijro/camoufox) is an anti-detect Firefox that provides a highly realistic browser fingerprint to prevent being instantly flagged as a bot. **It does not solve CAPTCHAs** — it simply helps the scraper look like a real user browsing ethically.
 
 ```bash
 # Install the Python Camoufox server
