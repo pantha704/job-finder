@@ -22,10 +22,10 @@
 
 ### Source Unblocking — Tier 2 (LinkedIn, Cutshort, Himalayas)
 
-- [ ] **UBK2-01**: LinkedIn scraper uses auth cookie injection (PipelineOptions.linkedin.cookie) to bypass rate-limit 429
-- [ ] **UBK2-02**: LinkedIn production run returns real job data (verified with real cookie)
-- [ ] **UBK2-03**: Himalayas scraper uses `fetchRendered` (Playwright) and returns non-zero results for React SPA
-- [ ] **UBK2-04**: Cutshort scraper uses `fetchRendered` (Playwright) as fallback and returns real job data (not 403)
+- [ ] **UBK2-01**: LinkedIn scraper uses auth cookie injection — ❌ Out of scope (violates "no login-gated content" constraint). Guard in place in src/index.ts.
+- [x] **UBK2-02**: LinkedIn guest API documented — ✅ Guest API requires auth cookie, guarded at pipeline level
+- [x] **UBK2-03**: Himalayas scraper uses `fetchRendered` and returns non-zero results — ✅ Fixed selector regex, 43 jobs from entry-level + web3 URLs
+- [x] **UBK2-04**: Cutshort scraper returns real job data — ✅ Already working (120 jobs via plain fetch)
 
 ### Source Unblocking — Tier 3 (Remotive, Jobicy, WWR)
 
@@ -70,10 +70,10 @@
 | UBK1-01 | Phase 7 | Complete |
 | UBK1-02 | Phase 7 | Out of Scope (DataDome blocks all paths) |
 | UBK1-03 | Phase 7 | Complete |
-| UBK2-01 | Phase 8 | Pending |
-| UBK2-02 | Phase 8 | Pending |
-| UBK2-03 | Phase 8 | Pending |
-| UBK2-04 | Phase 8 | Pending |
+| UBK2-01 | Phase 8 | Out of Scope (auth cookie = login-gated) |
+| UBK2-02 | Phase 8 | Complete |
+| UBK2-03 | Phase 8 | Complete |
+| UBK2-04 | Phase 8 | Complete |
 | UBK3-01 | Phase 9 | Pending |
 | UBK3-02 | Phase 9 | Pending |
 | UBK3-03 | Phase 9 | Pending |

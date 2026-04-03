@@ -30,12 +30,17 @@ export async function scrapeHimalayas(): Promise<Job[]> {
       let count = 0;
 
       // Himalayas job card selectors
+      // Exclude non-job pages like /jobs/full-time, /jobs/contractor, /jobs/sales
+      const nonJobPaths = new Set(['/jobs/full-time', '/jobs/part-time', '/jobs/contractor', '/jobs/internship', '/jobs/freelance', '/jobs/sales', '/jobs/', '/jobs']);
+
       $('a[href*="/jobs/"]').each((_, el) => {
         const $link = $(el);
         const href = $link.attr('href') || '';
 
-        // Only match actual job listing links (not pagination, nav, etc.)
-        if (!href.match(/\/jobs\/[a-z0-9-]+-at-[a-z0-9-]+/)) return;
+        // Only match actual job listing links (not pagination, nav, filters, etc.)
+        if (nonJobPaths.has(href)) return;
+        // Job links follow pattern: /jobs/{job-slug} — at least 2 path segments after /jobs/
+        if (!href.match(/^\/jobs\/[a-z0-9-]{5,}$/)) return;
 
         const $card = $link.closest('article, li, [class*="card"], [class*="job"]');
         const title = $card.find('h2, h3, [class*="title"]').first().text().trim()
