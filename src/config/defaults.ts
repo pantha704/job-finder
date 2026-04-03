@@ -8,6 +8,7 @@ export const DEFAULT_OPTIONS: PipelineOptions = {
   remoteFromIndia: true,
   showScore: true,
   output: 'job_opportunities.md',
+  maxPagesPerSource: 3,
   browser: {
     backend: 'playwright',
     headless: true,

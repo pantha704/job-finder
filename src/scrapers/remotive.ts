@@ -4,9 +4,10 @@ import { delay, checkRobotstxt, parseRelativeDate } from '../utils';
 import { fetchRendered } from '../browser';
 
 const BASE_URL = 'https://remotive.com';
-const MAX_PAGES = 5;
+const DEFAULT_MAX_PAGES = 5;
 
-export async function scrapeRemotive(): Promise<Job[]> {
+export async function scrapeRemotive(options?: { maxPages?: number }): Promise<Job[]> {
+  const maxPages = options?.maxPages ?? DEFAULT_MAX_PAGES;
   const jobs: Job[] = [];
   const allowed = await checkRobotstxt('remotive.com');
   if (!allowed) { console.warn('[Remotive] robots.txt blocked'); return jobs; }

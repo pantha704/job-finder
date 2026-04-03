@@ -183,6 +183,16 @@ export const runInteractiveMode = async (
       options.sources = sources;
     }
 
+    if (!options.maxPagesPerSource) {
+      const maxPages = await number({
+        message: "Max pages to fetch per source (higher = more jobs but slower):",
+        default: 3,
+        min: 1,
+        max: 20,
+      });
+      if (maxPages !== undefined) options.maxPagesPerSource = maxPages;
+    }
+
     if (!options.format) {
       const format = await select({
         message: "Output format:",

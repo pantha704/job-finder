@@ -55,6 +55,7 @@ const parseCliArgs = (): Partial<PipelineOptions> => {
       sources: { type: "string", short: "s" },
       browser: { type: "string" },
       headless: { type: "boolean" },
+      "max-pages": { type: "string", short: "m" },
       verbose: { type: "boolean", short: "v" },
       help: { type: "boolean", short: "h" },
       version: { type: "boolean", short: "V" },
@@ -87,6 +88,7 @@ const parseCliArgs = (): Partial<PipelineOptions> => {
     output: values.output as string | undefined,
     showScore: values.score as boolean | undefined,
     sources: toArray(values.sources),
+    maxPagesPerSource: values["max-pages"] ? parseInt(values["max-pages"] as string) : undefined,
     browser: {
       backend: (values.browser as any) || DEFAULT_OPTIONS.browser?.backend,
       headless: values.headless as boolean | undefined,
@@ -130,6 +132,7 @@ const main = async () => {
     console.log("  -S, --score               Show priority score [0-100]");
     console.log("\n" + chalk.cyan("Advanced:"));
     console.log("  -s, --sources <list>      internshala,wellfound,web3career,...");
+    console.log("  -m, --max-pages <n>       Max pages per source (default: 3)");
     console.log("  -v, --verbose             Debug logging");
     console.log("  -h, --help                Show this help");
     process.exit(0);
@@ -158,6 +161,7 @@ const main = async () => {
     console.log("  -S, --score               Show priority score [0-100]");
     console.log("\n" + chalk.cyan("Advanced:"));
     console.log("  -s, --sources <list>      internshala,wellfound,remoteok,solanajobs,...");
+    console.log("  -m, --max-pages <n>       Max pages per source (default: 3)");
     console.log("  -v, --verbose             Debug logging");
     console.log("  -h, --help                Show this help");
     process.exit(0);

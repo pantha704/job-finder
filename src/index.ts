@@ -34,7 +34,11 @@ interface RunPipelineParams extends PipelineOptions {
   onSourceComplete?: (source: string, count: number) => void;
 }
 
-const SCRAPERS: Record<string, () => Promise<Job[]>> = {
+interface ScraperOptions {
+  maxPages?: number;
+}
+
+const SCRAPERS: Record<string, (opts?: ScraperOptions) => Promise<Job[]>> = {
   // Tier 1
   internshala: scrapeInternshala,
   wellfound: scrapeWellfound,
@@ -86,7 +90,10 @@ export const runFullPipeline = async (params: RunPipelineParams): Promise<Filter
     }
 
     try {
-      const rawJobs = await scraperFn();
+      const scraperOpts: ScraperOptions = {
+        maxPages: params.maxPagesPerSource,
+      };
+      const rawJobs = await scraperFn(scraperOpts);
       let sourceCount = 0;
 
       for (const raw of rawJobs) {

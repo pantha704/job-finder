@@ -75,6 +75,7 @@ export interface PipelineOptions {
   showScore?: boolean;
 
   maxResults?: number;
+  maxPagesPerSource?: number;
   rateLimit?: number;
   respectRobotsTxt?: boolean;
   verbose?: boolean;
@@ -85,7 +86,7 @@ export interface PipelineOptions {
     headless?: boolean;
     userAgent?: string | 'rotate';
   };
-  
+
   linkedin?: {
     cookie?: string;
   };

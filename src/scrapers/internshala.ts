@@ -3,9 +3,10 @@ import type { Job } from '../types';
 import { delay, retry, checkRobotstxt, getRandomUserAgent, parseRelativeDate } from '../utils';
 
 const BASE_URL = 'https://internshala.com';
-const MAX_PAGES = 3;
+const DEFAULT_MAX_PAGES = 3;
 
-export async function scrapeInternshala(): Promise<Job[]> {
+export async function scrapeInternshala(options?: { maxPages?: number }): Promise<Job[]> {
+  const maxPages = options?.maxPages ?? DEFAULT_MAX_PAGES;
   const jobs: Job[] = [];
   const allowed = await checkRobotstxt('internshala.com');
   if (!allowed) {
@@ -23,7 +24,7 @@ export async function scrapeInternshala(): Promise<Job[]> {
   ];
 
   for (const basePath of paths) {
-    for (let page = 1; page <= MAX_PAGES; page++) {
+    for (let page = 1; page <= maxPages; page++) {
       const url = page === 1 ? `${BASE_URL}${basePath}` : `${BASE_URL}${basePath}/${page}`;
       try {
         const html = await retry(async () => {
