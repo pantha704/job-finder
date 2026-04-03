@@ -7,6 +7,26 @@
 
 ---
 
+**Features:** CLI Interface • 16+ Data Sources • Smart Deduplication • AI Match Scoring • Headless Bypasses 
+
+<details>
+<summary><b>Table of Contents</b></summary>
+
+- [📦 Install](#-install)
+- [⚡ Quick Start](#-quick-start)
+- [🖥️ CLI Reference](#️-cli-reference)
+- [📋 Output Format](#-output-format)
+- [🌐 Sources](#-sources)
+- [🏗️ Architecture](#️-architecture)
+- [🦊 Camoufox](#-camoufox-optional--for-wellfound--himalayas)
+- [🔧 Ethics Rules](#-ethics-rules-non-negotiable)
+- [➕ Adding a New Scraper](#-adding-a-new-scraper)
+- [📝 Local Development](#-local-development)
+
+</details>
+
+---
+
 ## 📦 Install
 
 ```bash
@@ -86,9 +106,10 @@ Output:
 
 Sources:
   -s, --sources <list>       Comma-separated list of sources to run (default: all)
-                             Available: internshala, wellfound, cutshort, himalayas,
-                             remoteok, remotive, solanajobs, cryptocurrencyjobs,
-                             jobicy, jobspresso, weworkremotely, unstop
+                              Available: internshala, wellfound, cutshort, himalayas,
+                              remoteok, remotive, solanajobs, cryptocurrencyjobs,
+                              jobicy, jobspresso, weworkremotely, unstop,
+                              web3career, ycombinator
 
 Browser:
       --browser <engine>     playwright | fetch  (default: playwright)
@@ -138,6 +159,8 @@ Check the box `[x]` when you apply to track progress.
 | **WeWorkRemotely** | 3 | fetch + cheerio | Classic remote board |
 | **Jobicy** | 3 | fetch + cheerio | Remote jobs aggregator |
 | **Jobspresso** | 3 | fetch + cheerio | Curated remote jobs |
+| **Web3.career** | 3 | fetch + cheerio | Remote crypto and blockchain jobs |
+| **YC Work at a Startup** | 3 | JSON API + fetch | Global startups backed by YC |
 | **LinkedIn** | — | — | ❌ Requires `--linkedin-cookie` auth |
 
 ### Run specific sources:
@@ -180,21 +203,12 @@ src/
 ├── formatter.ts              ← File append + batch write
 ├── browser.ts                ← Playwright / Camoufox / fetch fallback chain
 ├── utils.ts                  ← retry(), delay(), checkRobotstxt(), UA rotation
-└── scrapers/
+└── scrapers/                 ← 16+ source-specific extraction scripts
     ├── internshala.ts
-    ├── remoterocketship.ts
-    ├── unstop.ts
     ├── wellfound.ts
-    ├── cutshort.ts
-    ├── himalayas.ts
-    ├── remoteok.ts
-    ├── remotive.ts
-    ├── solanajobs.ts
-    ├── cryptocurrencyjobs.ts
-    ├── jobicy.ts
-    ├── jobspresso.ts
-    ├── weworkremotely.ts
-    └── linkedin.ts
+    ├── web3career.ts
+    ├── ycombinator.ts
+    └── ...                   ← (other scrapers here)
 ```
 
 ### Pipeline Flow
