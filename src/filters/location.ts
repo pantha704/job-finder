@@ -1,5 +1,6 @@
-import { Location, isLocationInIndia, searchLocations } from '../config/locations';
-import { PipelineOptions, FilteredJob, LocationScope } from '../types/options';
+import { isLocationInIndia, searchLocations } from '../config/locations';
+import type { Location } from '../config/locations';
+import type { PipelineOptions, FilteredJob, LocationScope } from '../types/options';
 
 export const normalizeLocation = (raw: string, options: PipelineOptions): {
   normalized: string;
@@ -26,7 +27,7 @@ export const normalizeLocation = (raw: string, options: PipelineOptions): {
 
   // Try to match against known Indian locations
   const matches = searchLocations(raw);
-  if (matches.length > 0) {
+  if (matches.length > 0 && matches[0]) {
     const bestMatch = matches[0];
     return {
       normalized: bestMatch.id,
@@ -91,7 +92,7 @@ export const matchesLocationFilter = (
 
     if (locationRadius && jobScope === 'hybrid') {
       const userLocations = locations.map((id) => searchLocations(id)[0]).filter(Boolean);
-      const userStates = new Set(userLocations.map((l: Location) => l.state || l.ut));
+      const userStates = new Set(userLocations.map((l: any) => l.state || l.ut));
       if (jobLocation?.state && userStates.has(jobLocation.state)) return true;
       if (jobLocation?.ut && userStates.has(jobLocation.ut)) return true;
     }

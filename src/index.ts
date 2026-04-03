@@ -14,16 +14,26 @@ import { scrapeWellfound } from "./scrapers/wellfound";
 import { scrapeUnstop } from "./scrapers/unstop";
 import { scrapeRemoteRocketship } from "./scrapers/remoterocketship";
 
+// Tier 2 Scrapers
+import { scrapeLinkedIn } from "./scrapers/linkedin";
+import { scrapeCutshort } from "./scrapers/cutshort";
+import { scrapeHimalayas } from "./scrapers/himalayas";
+
 interface RunPipelineParams extends PipelineOptions {
   onJobFound?: (job: FilteredJob, count: number, total: number) => void;
   onSourceComplete?: (source: string, count: number) => void;
 }
 
 const SCRAPERS: Record<string, () => Promise<Job[]>> = {
+  // Tier 1
   internshala: scrapeInternshala,
   wellfound: scrapeWellfound,
   unstop: scrapeUnstop,
   remoterocketship: scrapeRemoteRocketship,
+  // Tier 2
+  linkedin: scrapeLinkedIn,
+  cutshort: scrapeCutshort,
+  himalayas: scrapeHimalayas,
 };
 
 export const runFullPipeline = async (params: RunPipelineParams): Promise<FilteredJob[]> => {
@@ -46,6 +56,11 @@ export const runFullPipeline = async (params: RunPipelineParams): Promise<Filter
     const scraperFn = SCRAPERS[source.toLowerCase()];
     if (!scraperFn) {
       logger.warn(`No scraper found for source: ${source}`);
+      continue;
+    }
+
+    if (source.toLowerCase() === "linkedin" && !params.linkedin?.cookie) {
+      logger.warn("Skipping LinkedIn: requires --linkedin-cookie for auth");
       continue;
     }
 

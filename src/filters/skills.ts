@@ -1,4 +1,4 @@
-import { PipelineOptions, FilteredJob } from "../types/options";
+import type { PipelineOptions, FilteredJob } from "../types/options";
 
 export const scoreSkillsMatch = (
   job: FilteredJob,

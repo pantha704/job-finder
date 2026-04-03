@@ -164,6 +164,7 @@ export const runInteractiveMode = async (
     }
 
     if (!options.sources) {
+      const isIndiaRemote = options.locationScope === "remote-india";
       const sources = await checkbox({
         message: "Select job boards to scrape:",
         choices: [
@@ -172,8 +173,9 @@ export const runInteractiveMode = async (
           { value: "web3career", name: "Web3.career", description: "Crypto/Web3 roles ✓", checked: true },
           { value: "ycombinator", name: "YC Work at a Startup", description: "Global startups ✓", checked: true },
           { value: "remoterocketship", name: "Remote Rocketship", description: "Hidden remote gems", checked: false },
-          { value: "cutshort", name: "Cutshort", description: "AI-matched to recruiters", checked: false },
+          { value: "cutshort", name: "Cutshort", description: "India startup roles ✓", checked: isIndiaRemote },
           { value: "unstop", name: "Unstop", description: "Internships + hackathons", checked: false },
+          { value: "himalayas", name: "Himalayas", description: "Global remote", checked: false },
           { value: "linkedin", name: "LinkedIn", description: "⚠️ Requires auth", checked: false },
         ],
         validate: (vals) => vals.length > 0 || "Select at least one source",

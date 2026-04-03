@@ -86,7 +86,7 @@ export async function scrapeCutshort(): Promise<Job[]> {
       }
 
       console.log(`[Cutshort] ${url.split('?')[1] || 'base'}: +${count} (total: ${jobs.length})`);
-      await delay(3000);
+      await delay(5000);
     } catch (err: any) {
       if (err.message.includes('captcha') || err.message.includes('rate limit')) {
         console.warn(`[Cutshort] Blocked — skipping remaining`);

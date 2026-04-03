@@ -1,4 +1,4 @@
-import { PipelineOptions } from "../types/options";
+import type { PipelineOptions } from "../types/options";
 
 export const DEFAULT_OPTIONS: PipelineOptions = {
   experience: 'fresher',

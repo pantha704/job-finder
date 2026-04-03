@@ -1,5 +1,5 @@
 import { appendFileSync } from "fs";
-import { FilteredJob, PipelineOptions } from "../types/options";
+import type { FilteredJob, PipelineOptions } from "../types/options";
 
 export const writeJobToOutput = (job: FilteredJob, options: PipelineOptions) => {
   const file = options.output || 'job_opportunities.md';

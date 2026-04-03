@@ -1,4 +1,4 @@
-import { ExperienceLevel, LocationScope } from "../types/options";
+import type { ExperienceLevel, LocationScope } from "../types/options";
 
 export const validateExperience = (input: string): boolean | string => {
   const valid: ExperienceLevel[] = ['internship', 'fresher', 'junior', 'mid', 'senior', 'any'];

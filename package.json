@@ -1,5 +1,5 @@
 {
-  "name": "@pratham/job-finder",
+  "name": "@pantha704/job-finder",
   "version": "1.0.0",
   "description": "Fresher-focused remote job aggregator with Rust/Solana superpowers",
   "module": "index.ts",
@@ -12,7 +12,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "bun build src/cli.ts --outdir dist --target bun",
+    "build": "bun build src/cli.ts --outdir dist --target bun --external playwright --external playwright-core --external electron --external chromium-bidi --external figlet",
     "prepublishOnly": "bun run build",
     "start": "bun run src/cli.ts"
   },

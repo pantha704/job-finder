@@ -85,6 +85,10 @@ export interface PipelineOptions {
     headless?: boolean;
     userAgent?: string | 'rotate';
   };
+  
+  linkedin?: {
+    cookie?: string;
+  };
 }
 
 export interface FilteredJob {

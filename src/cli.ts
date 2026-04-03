@@ -1,3 +1,4 @@
+#!/usr/bin/env bun
 import { parseArgs } from "util";
 import chalk from "chalk";
 import figlet from "figlet";
@@ -27,7 +28,7 @@ const showBanner = () => {
 
 const parseCliArgs = (): Partial<PipelineOptions> => {
   const { values } = parseArgs({
-    args: Bun.argv,
+    args: Bun.argv.slice(2),
     options: {
       experience: { type: "string", short: "e" },
       location: { type: "string", short: "l" },
@@ -71,7 +72,7 @@ const parseCliArgs = (): Partial<PipelineOptions> => {
     workType: values.worktype as any,
     companyStage: values.stage as any,
     companySize: values.size as any,
-    industries: toArray(values.industry),
+    industries: toArray(values.industry) as any,
     minStipend: values["min-stipend"] ? parseInt(values["min-stipend"] as string) : undefined,
     minSalary: values["min-salary"] ? parseInt(values["min-salary"] as string) : undefined,
     equity: values.equity as boolean | undefined,
@@ -88,6 +89,8 @@ const parseCliArgs = (): Partial<PipelineOptions> => {
       headless: values.headless as boolean | undefined,
     },
     verbose: values.verbose as boolean | undefined,
+    help: values.help as boolean | undefined,
+    version: values.version as boolean | undefined,
   };
 };
 
@@ -156,8 +159,9 @@ const main = async () => {
     console.log(chalk.yellow(`💡 Apply to HIGH MATCH jobs within 48 hours!`));
 
     process.exit(0);
-  } catch (error) {
-    logger.error("Pipeline failed", error);
+  } catch (error: any) {
+    logger.error("Pipeline failed");
+    console.error(error);
     console.log(chalk.red("\n❌ Try: job-finder --help for usage tips"));
     process.exit(1);
   }
