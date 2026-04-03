@@ -77,13 +77,13 @@
 | UBK3-01 | Phase 9 | Out of Scope (anti-bot) |
 | UBK3-02 | Phase 9 | Out of Scope (anti-bot) |
 | UBK3-03 | Phase 9 | Out of Scope (anti-bot) |
-| PIPE-01 | Phase 10 | Pending |
-| PIPE-02 | Phase 10 | Pending |
-| PIPE-03 | Phase 10 | Pending |
-| PIPE-04 | Phase 10 | Pending |
-| DOC-01 | Phase 10 | Pending |
-| DOC-02 | Phase 10 | Pending |
-| DOC-03 | Phase 10 | Pending |
+| PIPE-01 | Phase 10 | Complete |
+| PIPE-02 | Phase 10 | Complete |
+| PIPE-03 | Phase 10 | Complete |
+| PIPE-04 | Phase 10 | Complete |
+| DOC-01 | Phase 10 | Complete |
+| DOC-02 | Phase 10 | Complete |
+| DOC-03 | Phase 10 | Complete |
 
 **Coverage:**
 - v1.1 requirements: 22 total

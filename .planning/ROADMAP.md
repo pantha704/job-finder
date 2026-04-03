@@ -18,13 +18,13 @@
 
 </details>
 
-### 🚧 v1.1 Reliability & Coverage (In Progress)
+### ✅ v1.1 Reliability & Coverage (Complete)
 
 - [x] Phase 6: Test Infrastructure (1/1 plans) — completed 2026-04-03
-- [ ] Phase 7: Wellfound Unblocking (3 requirements)
-- [ ] Phase 8: Tier 2 Unblocking (4 requirements)
-- [ ] Phase 9: Tier 3 Unblocking (3 requirements)
-- [ ] Phase 10: Pipeline Verification & Documentation (7 requirements)
+- [x] Phase 7: Wellfound Unblocking (1/1 plans) — completed 2026-04-03
+- [x] Phase 8: Tier 2 Unblocking (1/1 plans) — completed 2026-04-03
+- [x] Phase 9: Tier 3 Unblocking (1/1 plans) — completed 2026-04-03
+- [x] Phase 10: Pipeline Verification (1/1 plans) — completed 2026-04-03
 
 ## Progress
 
@@ -36,10 +36,10 @@
 | 4     | v1.0      | 1/1            | Complete    | 2026-04-03 |
 | 5     | v1.0      | 1/1            | Complete    | 2026-04-03 |
 | 6     | v1.1      | 1/1            | Complete    | 2026-04-03 |
-| 7     | v1.1      | 0/1            | Not started | -          |
-| 8     | v1.1      | 0/1            | Not started | -          |
-| 9     | v1.1      | 0/1            | Not started | -          |
-| 10    | v1.1      | 0/1            | Not started | -          |
+| 7     | v1.1      | 1/1            | Complete    | 2026-04-03 |
+| 8     | v1.1      | 1/1            | Complete    | 2026-04-03 |
+| 9     | v1.1      | 1/1            | Complete    | 2026-04-03 |
+| 10    | v1.1      | 1/1            | Complete    | 2026-04-03 |
 
 ---
 *Last updated: 2026-04-03*
