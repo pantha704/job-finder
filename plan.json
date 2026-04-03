@@ -1,0 +1,34 @@
+{
+  "phase": "02",
+  "plans": [
+    {
+      "id": "02",
+      "wave": 1,
+      "autonomous": true,
+      "objective": null,
+      "files_modified": [
+        "src/filter.ts",
+        "src/dedup.ts",
+        "src/formatter.ts",
+        "src/types.ts",
+        "src/scrapers/internshala.ts",
+        "src/scrapers/wellfound.ts",
+        "src/scrapers/unstop.ts",
+        "src/scrapers/remoterocketship.ts",
+        "src/index.ts",
+        "package.json"
+      ],
+      "task_count": 5,
+      "has_summary": false
+    }
+  ],
+  "waves": {
+    "1": [
+      "02"
+    ]
+  },
+  "incomplete": [
+    "02"
+  ],
+  "has_checkpoints": false
+}

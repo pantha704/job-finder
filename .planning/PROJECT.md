@@ -12,11 +12,13 @@ Produce a ready-to-use `job_opportunities.md` with 150+ verified, remote-friendl
 
 ### Validated
 
-(None yet — ship to validate)
+- [x] Auto-detect Camofox browser endpoint (port scan 9377, 3000, 9222, 8080) or fallback to HTTP fetch (Validated in Phase 01)
+- [x] Respect robots.txt, 3s delay between requests, no CAPTCHA bypass (Validated in Phase 01)
+- [x] Max 3 retries per URL; skip blocked pages with CAPTCHA (Validated in Phase 01)
+- [x] Use bun as runtime (Validated in Phase 01)
 
 ### Active
 
-- [ ] Auto-detect Camofox browser endpoint (port scan 9377, 3000, 9222, 8080) or fallback to HTTP fetch
 - [ ] Scrape Tier 1 sources: Internshala, Wellfound, RemoteRocketship, Unstop
 - [ ] Scrape Tier 2 sources: LinkedIn, Cutshort, Himalayas
 - [ ] Scrape Tier 3 Web3/Rust/Solana sources: jobs.solana.com, cryptocurrencyjobs.co
@@ -28,8 +30,12 @@ Produce a ready-to-use `job_opportunities.md` with 150+ verified, remote-friendl
 - [ ] Output `job_opportunities.md` as markdown checklist with `- [ ]` tracking
 - [ ] Include application tracker table at bottom of output
 - [ ] Report progress every 25 jobs extracted
-- [ ] Respect robots.txt, 3s delay between requests, no CAPTCHA bypass
-- [ ] Max 3 retries per URL; skip blocked pages with CAPTCHA
+- [ ] Filter to last 14 days only
+- [ ] Flag jobs matching Rust/Solana/TypeScript/Next.js with "🔥 HIGH MATCH"
+- [ ] De-duplicate jobs by company+title+link hash
+- [ ] Output `job_opportunities.md` as markdown checklist with `- [ ]` tracking
+- [ ] Include application tracker table at bottom of output
+- [ ] Report progress every 25 jobs extracted
 
 ### Out of Scope
 
@@ -62,8 +68,8 @@ Produce a ready-to-use `job_opportunities.md` with 150+ verified, remote-friendl
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Camofox CDP first, then HTTP fetch | Camofox handles JS-rendered pages; HTTP fetch for static sites | — Pending |
-| Bun as runtime | User preference (global rule) | — Pending |
+| Camofox CDP first, then HTTP fetch | Camofox handles JS-rendered pages; HTTP fetch for static sites | Phase 01 Implemented |
+| Bun as runtime | User preference (global rule) | Phase 01 Implemented |
 | Markdown checklist format | `- [ ]` enables direct tracking in any markdown viewer | — Pending |
 | 🔥 HIGH MATCH flag for Rust/Solana/TS/Next.js | Pratham's strongest skills; need high-signal filtering | — Pending |
 | De-dupe by hash(company + title + link) | Prevents same job appearing from multiple sources | — Pending |
@@ -86,4 +92,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-03 after initialization*
+*Last updated: 2026-04-03 after Phase 01 completion*

@@ -1,0 +1,73 @@
+{
+  "milestones": [],
+  "phases": [
+    {
+      "number": "1",
+      "name": "Foundation — Project Setup, Ethics & Browser",
+      "goal": "Bootstrap the Bun+TypeScript project with all utilities, ethics infrastructure, and browser connection established so subsequent phases can scrape immediately.",
+      "depends_on": null,
+      "plan_count": 1,
+      "summary_count": 0,
+      "has_context": true,
+      "has_research": true,
+      "disk_status": "planned",
+      "roadmap_complete": false
+    },
+    {
+      "number": "2",
+      "name": "Tier 1 Scraping + Data Processing Pipeline",
+      "goal": "Scrape all 4 Tier 1 sources (Internshala, Wellfound, RemoteRocketship, Unstop) and build the complete data processing pipeline (filter, dedup, HIGH MATCH flag, progress reporting).",
+      "depends_on": null,
+      "plan_count": 0,
+      "summary_count": 0,
+      "has_context": false,
+      "has_research": false,
+      "disk_status": "no_directory",
+      "roadmap_complete": false
+    },
+    {
+      "number": "3",
+      "name": "Tier 2 Scraping (LinkedIn, Cutshort, Himalayas)",
+      "goal": "Add all 3 Tier 2 sources with graceful handling for LinkedIn's anti-bot measures.",
+      "depends_on": null,
+      "plan_count": 0,
+      "summary_count": 0,
+      "has_context": false,
+      "has_research": false,
+      "disk_status": "no_directory",
+      "roadmap_complete": false
+    },
+    {
+      "number": "4",
+      "name": "Tier 3 Web3/Rust/Solana Scraping",
+      "goal": "Add both Web3-focused sources and ensure Rust/Solana jobs are discovered and properly HIGH MATCH flagged.",
+      "depends_on": null,
+      "plan_count": 0,
+      "summary_count": 0,
+      "has_context": false,
+      "has_research": false,
+      "disk_status": "no_directory",
+      "roadmap_complete": false
+    },
+    {
+      "number": "5",
+      "name": "Output Formatting, Sorting & Final Run",
+      "goal": "Generate the final `job_opportunities.md` with proper sorting (HIGH MATCH + recency), application tracker table, and achieve the 150+ job success threshold.",
+      "depends_on": null,
+      "plan_count": 0,
+      "summary_count": 0,
+      "has_context": false,
+      "has_research": false,
+      "disk_status": "no_directory",
+      "roadmap_complete": false
+    }
+  ],
+  "phase_count": 5,
+  "completed_phases": 0,
+  "total_plans": 1,
+  "total_summaries": 0,
+  "progress_percent": 0,
+  "current_phase": "1",
+  "next_phase": "2",
+  "missing_phase_details": null
+}
