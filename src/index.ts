@@ -3,7 +3,6 @@ import type { Job } from "./types";
 import { logger } from "./utils/logger";
 import { generateDedupKey, mergeJobs, validateUrl } from "./dedup";
 import { writeJobToOutput } from "./utils/output";
-import { appendJobsToFile } from "./formatter";
 import { normalizeLocation, matchesLocationFilter, scoreLocationMatch } from "./filters/location";
 import { normalizeExperience, matchesExperienceFilter, scoreExperienceMatch } from "./filters/experience";
 import { scoreSkillsMatch } from "./filters/skills";
@@ -175,22 +174,6 @@ export const runFullPipeline = async (params: RunPipelineParams): Promise<Filter
           params.onJobFound(filteredJob, totalSaved, Array.from(dedupMap.keys()).length);
         }
 
-        // Buffer matching Output chunks directly
-        if (batch.length >= 25) {
-          await appendJobsToFile(outputFile, batch.map(fj => ({
-            title: fj.title,
-            company: fj.company,
-            applyUrl: fj.application.url,
-            location: typeof fj.location === 'string' ? fj.location : fj.location.raw,
-            experience: typeof fj.experience === 'string' ? fj.experience : fj.experience.raw,
-            salary: fj.compensation?.raw || null,
-            postedDate: fj.temporal?.postedDate || null,
-            techStack: fj.skills?.matched?.length ? fj.skills.matched : (fj.skills?.required || []),
-            source: fj.metadata.source,
-            isHighMatch: fj.isHighMatch,
-          })));
-          batch = [];
-        }
       }
 
       if (params.onSourceComplete) {
@@ -199,22 +182,6 @@ export const runFullPipeline = async (params: RunPipelineParams): Promise<Filter
     } catch (err) {
       logger.error({ err }, `Error scraping ${source}`);
     }
-  }
-
-  // Flush remaining
-  if (batch.length > 0) {
-    await appendJobsToFile(outputFile, batch.map(fj => ({
-      title: fj.title,
-      company: fj.company,
-      applyUrl: fj.application.url,
-      location: typeof fj.location === 'string' ? fj.location : fj.location.raw,
-      experience: typeof fj.experience === 'string' ? fj.experience : fj.experience.raw,
-      salary: fj.compensation?.raw || null,
-      postedDate: fj.temporal?.postedDate || null,
-      techStack: fj.skills?.matched?.length ? fj.skills.matched : (fj.skills?.required || []),
-      source: fj.metadata.source,
-      isHighMatch: fj.isHighMatch,
-    })));
   }
 
   return Array.from(dedupMap.values());

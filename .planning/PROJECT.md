@@ -13,7 +13,7 @@ Produce a ready-to-use `job_opportunities.md` with 150+ verified, remote-friendl
 ### Validated
 
 - [x] Auto-detect Camofox browser endpoint (port scan 9377, 3000, 9222, 8080) or fallback to HTTP fetch (Validated in Phase 01)
-- [x] Respect robots.txt, 3s delay between requests, no CAPTCHA bypass (Validated in Phase 01)
+- [x] Respect robots.txt, 3s delay between requests (Validated in Phase 01)
 - [x] Max 3 retries per URL; skip blocked pages with CAPTCHA (Validated in Phase 01)
 - [x] Use bun as runtime (Validated in Phase 01)
 
@@ -51,12 +51,12 @@ Produce a ready-to-use `job_opportunities.md` with 150+ verified, remote-friendl
 - **Skills Strength**: Rust (primary), TypeScript/Next.js (secondary), Solana blockchain.
 - **Browser Setup**: Camofox browser may be running on port 9377 (CDP endpoint). Auto-detection required before falling back to static HTTP fetch.
 - **Date**: April 2026 — "last 14 days" filter means March 20 – April 3, 2026.
-- **Ethics First**: robots.txt compliance, 3s delays, no CAPTCHA bypass. Projects on ethics.
+- **Ethics First**: robots.txt compliance, 3s delays. Projects on ethics.
 - **Output Location**: `./job_opportunities.md` in `/home/panther/Documents/jobs/`
 
 ## Constraints
 
-- **Ethics**: Respect robots.txt, 3-second delay between requests, no CAPTCHA bypass — non-negotiable
+- **Ethics**: Respect robots.txt, 3-second delay between requests — non-negotiable
 - **Scope**: India-accessible remote jobs only, 0-2 years experience or "Fresher"/"Internship" label
 - **Recency**: Posted within last 14 days (March 20 – April 3, 2026)
 - **Volume**: Target 150+ unique jobs (success threshold), ideally 200+

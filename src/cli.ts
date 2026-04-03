@@ -5,6 +5,7 @@ import chalk from "chalk";
 import figlet from "figlet";
 import { runInteractiveMode } from "./prompts/interactive";
 import { runFullPipeline } from "./index";
+import { writeMarkdownReport } from "./formatter";
 import { DEFAULT_OPTIONS } from "./config/defaults";
 import type { PipelineOptions } from "./types/options";
 import { logger } from "./utils/logger";
@@ -198,6 +199,9 @@ const main = async () => {
     const rawOutput = finalOptions.output || 'job_opportunities.md';
     const outputExt = rawOutput.endsWith('.md') ? rawOutput : rawOutput + '.md';
     const absOutput = resolve(process.cwd(), outputExt);
+    
+    await writeMarkdownReport(absOutput, results, finalOptions);
+    
     console.log(chalk.green(`\n✨ Done! ${results.length} jobs • ${highMatches} 🔥 HIGH MATCH`));
     console.log(chalk.cyan(`💾 Saved: ${absOutput}`));
     console.log(chalk.yellow(`💡 Apply to HIGH MATCH jobs within 48 hours!`));
