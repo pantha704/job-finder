@@ -12,11 +12,22 @@ import type { PipelineOptions } from "./types/options";
 import { logger } from "./utils/logger";
 
 const showBanner = () => {
-  console.log(
-    chalk.cyanBright(
-      figlet.textSync("DEV-JOB-FINDER", { font: "ANSI Shadow" })
-    )
-  );
+  const termWidth = process.stdout.columns || 80;
+
+  if (termWidth >= 32) {
+    // Fits in any terminal: 30-char-wide ASCII art
+    console.log(
+      chalk.cyanBright(
+        figlet.textSync("DEV-JOB-FINDER", { font: "Digital" })
+      )
+    );
+  } else {
+    // Extremely narrow: minimal fallback
+    console.log(chalk.cyanBright.bold("  ┌─────────────────┐"));
+    console.log(chalk.cyanBright.bold("  │  DEV-JOB-FINDER │"));
+    console.log(chalk.cyanBright.bold("  └─────────────────┘"));
+  }
+
   console.log(
     chalk.gray("   Find remote fresher jobs that actually want YOU\n")
   );
