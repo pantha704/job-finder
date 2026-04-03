@@ -143,7 +143,7 @@ export const runFullPipeline = async (params: RunPipelineParams): Promise<Filter
         score += scoreSkillsMatch(filteredJob, params);
 
         filteredJob.matchScore = score;
-        if (score >= 35 || filteredJob.skills.highlight) {
+        if (score >= 40) {
           filteredJob.isHighMatch = true;
         }
 

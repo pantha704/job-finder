@@ -3,7 +3,7 @@ import type { Job } from '../types';
 import { delay, retry, checkRobotstxt, getRandomUserAgent, parseRelativeDate } from '../utils';
 
 const BASE_URL = 'https://internshala.com';
-const MAX_PAGES = 10;
+const MAX_PAGES = 3;
 
 export async function scrapeInternshala(): Promise<Job[]> {
   const jobs: Job[] = [];

@@ -69,7 +69,6 @@ export const scoreSkillsMatch = (
 
   if (job.skills.matched.length > 0) {
     job.skills.highlight = true;
-    job.isHighMatch = true;   // skill match always = HIGH MATCH
   }
 
   return Math.min(score, 60); // cap at 60 pts for skill component
