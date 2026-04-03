@@ -19,6 +19,15 @@ import { scrapeLinkedIn } from "./scrapers/linkedin";
 import { scrapeCutshort } from "./scrapers/cutshort";
 import { scrapeHimalayas } from "./scrapers/himalayas";
 
+// Tier 3 — Public APIs & niche boards
+import { scrapeRemoteOK } from "./scrapers/remoteok";
+import { scrapeRemotive } from "./scrapers/remotive";
+import { scrapeSolanaJobs } from "./scrapers/solanajobs";
+import { scrapeCryptocurrencyJobs } from "./scrapers/cryptocurrencyjobs";
+import { scrapeJobicy } from "./scrapers/jobicy";
+import { scrapeJobspresso } from "./scrapers/jobspresso";
+import { scrapeWeWorkRemotely } from "./scrapers/weworkremotely";
+
 interface RunPipelineParams extends PipelineOptions {
   onJobFound?: (job: FilteredJob, count: number, total: number) => void;
   onSourceComplete?: (source: string, count: number) => void;
@@ -34,6 +43,14 @@ const SCRAPERS: Record<string, () => Promise<Job[]>> = {
   linkedin: scrapeLinkedIn,
   cutshort: scrapeCutshort,
   himalayas: scrapeHimalayas,
+  // Tier 3
+  remoteok: scrapeRemoteOK,
+  remotive: scrapeRemotive,
+  solanajobs: scrapeSolanaJobs,
+  cryptocurrencyjobs: scrapeCryptocurrencyJobs,
+  jobicy: scrapeJobicy,
+  jobspresso: scrapeJobspresso,
+  weworkremotely: scrapeWeWorkRemotely,
 };
 
 export const runFullPipeline = async (params: RunPipelineParams): Promise<FilteredJob[]> => {

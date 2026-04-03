@@ -58,18 +58,14 @@ export const matchesLocationFilter = (
   const jobLocId = job.location.locationId;
 
   if (remoteFromIndia === true) {
-    return (
-      jobScope === 'remote-india' ||
-      (jobScope === 'remote-global' && job.location.raw.toLowerCase().includes('india'))
-    );
+    // Accept remote-india (perfect) AND remote-global (workable from India) — reject onsite only
+    return jobScope === 'remote-india' || jobScope === 'remote-global' || jobScope === 'any';
   }
 
   if (locationScope && locationScope !== 'any') {
     if (locationScope === 'remote-india') {
-      if (jobScope === 'remote-india') return true;
-      if (jobScope === 'remote-global' && job.location.raw.toLowerCase().includes('india')) {
-        return true;
-      }
+      // Accept both remote-india and remote-global (accessible from India)
+      if (jobScope === 'remote-india' || jobScope === 'remote-global' || jobScope === 'any') return true;
       return false;
     }
     if (jobScope !== locationScope) {

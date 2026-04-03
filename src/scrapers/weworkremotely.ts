@@ -2,7 +2,7 @@ import * as cheerio from 'cheerio';
 import type { Job } from '../types';
 import { delay, retry, getRandomUserAgent, checkRobotstxt } from '../utils';
 
-export async function scrapeWWR(): Promise<Job[]> {
+export async function scrapeWeWorkRemotely(): Promise<Job[]> {
   const jobs: Job[] = [];
   const allowed = await checkRobotstxt('weworkremotely.com');
   if (!allowed) { console.warn('[WWR] robots.txt blocked'); return jobs; }

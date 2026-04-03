@@ -1,5 +1,6 @@
 #!/usr/bin/env bun
 import { parseArgs } from "util";
+import { resolve } from "path";
 import chalk from "chalk";
 import figlet from "figlet";
 import { runInteractiveMode } from "./prompts/interactive";
@@ -89,9 +90,20 @@ const parseCliArgs = (): Partial<PipelineOptions> => {
       headless: values.headless as boolean | undefined,
     },
     verbose: values.verbose as boolean | undefined,
-    help: values.help as boolean | undefined,
-    version: values.version as boolean | undefined,
   };
+};
+
+const parseHelpVersion = () => {
+  const { values } = parseArgs({
+    args: Bun.argv.slice(2),
+    options: {
+      help: { type: "boolean", short: "h" },
+      version: { type: "boolean", short: "V" },
+    },
+    strict: false,
+    allowPositionals: true,
+  });
+  return { help: !!values.help, version: !!values.version };
 };
 
 const main = async () => {
@@ -126,6 +138,34 @@ const main = async () => {
     process.exit(0);
   }
 
+  const { help, version } = parseHelpVersion();
+
+  if (help) {
+    console.log(chalk.cyan("Usage:") + "\n  job-finder [options]\n");
+    console.log(chalk.cyan("Core Filters:"));
+    console.log("  -e, --experience <level>  internship|fresher|junior|mid|senior");
+    console.log("  -l, --location <scope>    remote-india|remote-global|hybrid|onsite");
+    console.log("  -R, --roles <list>        web3,backend,frontend,fullstack,...");
+    console.log("  -H, --highlight <list>    Tech stacks to flag as 🔥 HIGH MATCH");
+    console.log("\n" + chalk.cyan("Personalization:"));
+    console.log("  -g, --github <user>       Extract skills from GitHub profile");
+    console.log("  -r, --resume <path>       Boost matches with resume keywords");
+    console.log("\n" + chalk.cyan("Output:"));
+    console.log("  -f, --format <fmt>        md|json|csv|all (default: md)");
+    console.log("  -o, --output <path>       Output file path (default: job_opportunities.md)");
+    console.log("  -S, --score               Show priority score [0-100]");
+    console.log("\n" + chalk.cyan("Advanced:"));
+    console.log("  -s, --sources <list>      internshala,wellfound,remoteok,solanajobs,...");
+    console.log("  -v, --verbose             Debug logging");
+    console.log("  -h, --help                Show this help");
+    process.exit(0);
+  }
+
+  if (version) {
+    console.log(`job-finder v${process.env.npm_package_version || "1.0.0"}`);
+    process.exit(0);
+  }
+
   const baseOptions: PipelineOptions = { ...DEFAULT_OPTIONS, ...cliOptions };
 
   const hasMinimalConfig = baseOptions.roles?.length && baseOptions.sources?.length;
@@ -154,8 +194,12 @@ const main = async () => {
     });
 
     const highMatches = results.filter((j) => j.isHighMatch).length;
+    // Resolve to absolute path so user always knows where to find the file
+    const rawOutput = finalOptions.output || 'job_opportunities.md';
+    const outputExt = rawOutput.endsWith('.md') ? rawOutput : rawOutput + '.md';
+    const absOutput = resolve(process.cwd(), outputExt);
     console.log(chalk.green(`\n✨ Done! ${results.length} jobs • ${highMatches} 🔥 HIGH MATCH`));
-    console.log(chalk.gray(`💾 Saved: ${finalOptions.output || 'job_opportunities.md'}`));
+    console.log(chalk.cyan(`💾 Saved: ${absOutput}`));
     console.log(chalk.yellow(`💡 Apply to HIGH MATCH jobs within 48 hours!`));
 
     process.exit(0);
