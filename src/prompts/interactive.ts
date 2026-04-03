@@ -165,18 +165,24 @@ export const runInteractiveMode = async (
 
     if (!options.sources) {
       const isIndiaRemote = options.locationScope === "remote-india";
+      console.log(chalk.dim("   💡 Sources marked ️ need Camoufox browser for anti-bot bypass"));
       const sources = await checkbox({
         message: "Select job boards to scrape:",
         choices: [
           { value: "internshala", name: "Internshala", description: "Best for Indian freshers ✓", checked: true },
           { value: "web3career", name: "Web3.career", description: "Crypto/Web3 roles ✓", checked: true },
-          { value: "remoterocketship", name: "Remote Rocketship", description: "Hidden remote gems", checked: false },
           { value: "cutshort", name: "Cutshort", description: "India startup roles ✓", checked: isIndiaRemote },
-          { value: "unstop", name: "Unstop", description: "Internships + hackathons", checked: false },
-          { value: "himalayas", name: "Himalayas", description: "Global remote", checked: false },
           { value: "remoteok", name: "RemoteOK", description: "Remote jobs API ✓", checked: false },
           { value: "solanajobs", name: "Solana Jobs", description: "Solana ecosystem ✓", checked: false },
-          { value: "linkedin", name: "LinkedIn", description: "⚠️ Requires auth cookie", checked: false },
+          { value: "himalayas", name: "Himalayas", description: "Global remote", checked: false },
+          { value: "remoterocketship", name: "Remote Rocketship", description: "Hidden remote gems", checked: false },
+          { value: "unstop", name: "Unstop", description: "Internships + hackathons", checked: false },
+          { value: "linkedin", name: "LinkedIn", description: "⚠️ Auth cookie + Camoufox", checked: false },
+          { value: "remotive", name: "Remotive", description: "⚠️ Camoufox needed (anti-bot)", checked: false },
+          { value: "jobicy", name: "Jobicy", description: "⚠️ Camoufox needed (anti-bot)", checked: false },
+          { value: "weworkremotely", name: "We Work Remotely", description: "⚠️ Camoufox needed (anti-bot)", checked: false },
+          { value: "jobspresso", name: "Jobspresso", description: "⚠️ Camoufox needed (anti-bot)", checked: false },
+          { value: "cryptocurrencyjobs", name: "CryptocurrencyJobs", description: "⚠️ Camoufox needed (anti-bot)", checked: false },
           { value: "wellfound", name: "Wellfound", description: "⚠️ Blocked (DataDome)", checked: false },
           { value: "ycombinator", name: "YC Startups", description: "⚠️ Blocked (Algolia locked)", checked: false },
         ],
