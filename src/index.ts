@@ -27,6 +27,8 @@ import { scrapeCryptocurrencyJobs } from "./scrapers/cryptocurrencyjobs";
 import { scrapeJobicy } from "./scrapers/jobicy";
 import { scrapeJobspresso } from "./scrapers/jobspresso";
 import { scrapeWeWorkRemotely } from "./scrapers/weworkremotely";
+import { scrapeWeb3Career } from "./scrapers/web3career";
+import { scrapeYCombinator } from "./scrapers/ycombinator";
 
 interface RunPipelineParams extends PipelineOptions {
   onJobFound?: (job: FilteredJob, count: number, total: number) => void;
@@ -51,6 +53,9 @@ const SCRAPERS: Record<string, () => Promise<Job[]>> = {
   jobicy: scrapeJobicy,
   jobspresso: scrapeJobspresso,
   weworkremotely: scrapeWeWorkRemotely,
+  // New scrapers
+  web3career: scrapeWeb3Career,
+  ycombinator: scrapeYCombinator,
 };
 
 export const runFullPipeline = async (params: RunPipelineParams): Promise<FilteredJob[]> => {
