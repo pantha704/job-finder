@@ -1,6 +1,7 @@
 #!/usr/bin/env bun
 import { parseArgs } from "util";
 import { resolve } from "path";
+import { version as PKG_VERSION } from "../package.json";
 import chalk from "chalk";
 import figlet from "figlet";
 import { runInteractiveMode } from "./prompts/interactive";
@@ -20,7 +21,7 @@ const showBanner = () => {
     chalk.gray("   Find remote fresher jobs that actually want YOU\n")
   );
   console.log(
-    chalk.dim(`v${process.env.npm_package_version || "1.0.0"} • `) +
+    chalk.dim(`v${PKG_VERSION} • `) +
       chalk.green("Built by a fresher, for freshers") +
       chalk.dim(" • ") +
       chalk.blue("github.com/pantha704/job-finder") +
@@ -135,7 +136,7 @@ const main = async () => {
   }
 
   if (vals.version) {
-    console.log(`job-finder v${process.env.npm_package_version || "1.0.0"}`);
+    console.log(`job-finder v${PKG_VERSION}`);
     process.exit(0);
   }
 
@@ -163,7 +164,7 @@ const main = async () => {
   }
 
   if (version) {
-    console.log(`job-finder v${process.env.npm_package_version || "1.0.0"}`);
+    console.log(`job-finder v${PKG_VERSION}`);
     process.exit(0);
   }
 
