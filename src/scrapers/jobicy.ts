@@ -1,6 +1,7 @@
 import * as cheerio from 'cheerio';
 import type { Job } from '../types';
-import { delay, retry, getRandomUserAgent, checkRobotstxt } from '../utils';
+import { delay, checkRobotstxt } from '../utils';
+import { fetchRendered } from '../browser';
 
 export async function scrapeJobicy(): Promise<Job[]> {
   const jobs: Job[] = [];
@@ -18,13 +19,13 @@ export async function scrapeJobicy(): Promise<Job[]> {
 
   for (const url of searches) {
     try {
-      const html = await retry(async () => {
-        const res = await fetch(url, {
-          headers: { 'User-Agent': getRandomUserAgent(), 'Accept': 'text/html' }
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.text();
-      });
+      const { html, method } = await fetchRendered(url);
+      console.log(`[Jobicy] using ${method} for ${url.split('?')[0].split('/').pop()}`);
+
+      if (html.includes('403') || html.includes('access denied') || html.length < 1000) {
+        console.warn(`[Jobicy] Blocked (${method}, ${html.length} chars) — skipping`);
+        continue;
+      }
 
       const $ = cheerio.load(html);
       let count = 0;

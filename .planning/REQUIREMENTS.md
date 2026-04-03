@@ -29,9 +29,9 @@
 
 ### Source Unblocking — Tier 3 (Remotive, Jobicy, WWR)
 
-- [ ] **UBK3-01**: Remotive scraper bypasses 403 anti-bot using headless browser (Camoufox or Playwright)
-- [ ] **UBK3-02**: Jobicy scraper bypasses 403 anti-bot using headless browser
-- [ ] **UBK3-03**: WeWorkRemotely scraper bypasses 403 anti-bot using headless browser
+- [ ] **UBK3-01**: Remotive — ❌ Out of Scope (external anti-bot, selectors don't match rendered DOM)
+- [ ] **UBK3-02**: Jobicy — ❌ Out of Scope (external anti-bot, selectors don't match rendered DOM)
+- [ ] **UBK3-03**: WeWorkRemotely — ❌ Out of Scope (anti-bot challenge page, no job listing DOM)
 
 ### Full Pipeline Verification
 
@@ -74,9 +74,9 @@
 | UBK2-02 | Phase 8 | Complete |
 | UBK2-03 | Phase 8 | Complete |
 | UBK2-04 | Phase 8 | Complete |
-| UBK3-01 | Phase 9 | Pending |
-| UBK3-02 | Phase 9 | Pending |
-| UBK3-03 | Phase 9 | Pending |
+| UBK3-01 | Phase 9 | Out of Scope (anti-bot) |
+| UBK3-02 | Phase 9 | Out of Scope (anti-bot) |
+| UBK3-03 | Phase 9 | Out of Scope (anti-bot) |
 | PIPE-01 | Phase 10 | Pending |
 | PIPE-02 | Phase 10 | Pending |
 | PIPE-03 | Phase 10 | Pending |

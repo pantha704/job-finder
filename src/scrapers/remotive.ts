@@ -1,6 +1,7 @@
 import * as cheerio from 'cheerio';
 import type { Job } from '../types';
-import { delay, retry, checkRobotstxt, getRandomUserAgent, parseRelativeDate } from '../utils';
+import { delay, checkRobotstxt, parseRelativeDate } from '../utils';
+import { fetchRendered } from '../browser';
 
 const BASE_URL = 'https://remotive.com';
 const MAX_PAGES = 5;
@@ -24,13 +25,14 @@ export async function scrapeRemotive(): Promise<Job[]> {
   for (const path of paths) {
     const url = `${BASE_URL}${path}`;
     try {
-      const html = await retry(async () => {
-        const res = await fetch(url, {
-          headers: { 'User-Agent': getRandomUserAgent(), 'Accept': 'text/html' }
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.text();
-      });
+      const { html, method } = await fetchRendered(url);
+      console.log(`[Remotive] using ${method} for ${path}`);
+
+      // Check for 403 / anti-bot challenge
+      if (html.includes('403') || html.includes('access denied') || html.length < 1000) {
+        console.warn(`[Remotive] Blocked or challenge page (${method}, ${html.length} chars) — skipping`);
+        continue;
+      }
 
       const $ = cheerio.load(html);
       let count = 0;

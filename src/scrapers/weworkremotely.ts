@@ -1,6 +1,7 @@
 import * as cheerio from 'cheerio';
 import type { Job } from '../types';
-import { delay, retry, getRandomUserAgent, checkRobotstxt } from '../utils';
+import { delay, checkRobotstxt } from '../utils';
+import { fetchRendered } from '../browser';
 
 export async function scrapeWeWorkRemotely(): Promise<Job[]> {
   const jobs: Job[] = [];
@@ -20,13 +21,16 @@ export async function scrapeWeWorkRemotely(): Promise<Job[]> {
 
   for (const url of urls) {
     try {
-      const html = await retry(async () => {
-        const res = await fetch(url, {
-          headers: { 'User-Agent': getRandomUserAgent(), 'Accept': 'text/html' }
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.text();
-      });
+      const { html, method } = await fetchRendered(url);
+      console.log(`[WWR] using ${method} for ${url.split('/').pop() || url.split('/').slice(-2)[0]}`);
+
+      // WWR anti-bot pages return large HTML but with no job listings
+      // Real job pages have job-listing elements; challenge pages don't
+      const hasJobListings = html.includes('job-listing') || html.includes('job_card') || html.includes('apply-now');
+      if (!hasJobListings) {
+        console.warn(`[WWR] Anti-bot challenge page detected (${method}) — skipping`);
+        continue;
+      }
 
       const $ = cheerio.load(html);
       let count = 0;
