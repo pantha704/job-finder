@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: reliability-coverage
 status: planning
-last_updated: "2026-04-03T15:45:00Z"
+last_updated: "2026-04-03T16:00:00Z"
 progress:
-  total_phases: 0
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
+  total_phases: 5
+  completed_phases: 1
+  total_plans: 1
+  completed_plans: 1
 ---
 
 # STATE.md — Project Memory
@@ -18,7 +18,7 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-04-03)
 
 **Core value:** Produce a ready-to-use `job_opportunities.md` with 150+ verified remote fresher job links, Rust/Solana/TS flagged
-**Current focus:** v1.1 — closing all gaps from v1.0 audit
+**Current focus:** v1.1 Phase 7 — Wellfound Unblocking
 
 ## Shipped
 
@@ -28,6 +28,10 @@ See: `.planning/PROJECT.md` (updated 2026-04-03)
   - 254 jobs found, 22 HIGH MATCH
   - Archive: `.planning/milestones/v1.0-ROADMAP.md`
 
+- ✅ **v1.1 Phase 6 — Test Infrastructure** (2026-04-03)
+  - 96 tests across 6 files, 131 assertions, all green
+  - Covers: utils, browser, location, experience, skills, dedup
+
 ## Key Context for Next Agent
 
 1. **Camoufox ≠ Chrome CDP** — uses Firefox Juggler protocol via Playwright
@@ -35,16 +39,16 @@ See: `.planning/PROJECT.md` (updated 2026-04-03)
 3. **3s delay mandatory** between requests — ethical constraint
 4. **Output file**: `./job_opportunities.md` (project root)
 5. **HIGH MATCH keywords**: Rust, Solana, TypeScript, Next.js
+6. **Test suite**: `bun test` — 96 tests, all passing
 
 ## Blockers
 
 None.
 
-## Tech Debt Carrying Forward
+## Tech Debt Remaining
 
-- No unit test suite
 - 6 blocked sources (Wellfound CAPTCHA, Remotive/Jobicy/WWR 403, LinkedIn 429, Himalayas SPA)
-- REQUIREMENTS.md traceability incomplete for Phase 3-5
+- REQUIREMENTS.md traceability incomplete for Phase 3-5 (Phase 10 will fix)
 
 ---
-*STATE.md updated: 2026-04-03 after v1.0 milestone*
+*STATE.md updated: 2026-04-03 after Phase 6 completion*
