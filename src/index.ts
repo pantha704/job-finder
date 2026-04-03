@@ -172,7 +172,18 @@ export const runFullPipeline = async (params: RunPipelineParams): Promise<Filter
 
         // Buffer matching Output chunks directly
         if (batch.length >= 25) {
-          await appendJobsToFile(outputFile, batch as any); // Cast as Job compat internally
+          await appendJobsToFile(outputFile, batch.map(fj => ({
+            title: fj.title,
+            company: fj.company,
+            applyUrl: fj.application.url,
+            location: typeof fj.location === 'string' ? fj.location : fj.location.raw,
+            experience: typeof fj.experience === 'string' ? fj.experience : fj.experience.raw,
+            salary: fj.compensation?.raw || null,
+            postedDate: fj.temporal?.postedDate || null,
+            techStack: fj.skills?.matched?.length ? fj.skills.matched : (fj.skills?.required || []),
+            source: fj.metadata.source,
+            isHighMatch: fj.isHighMatch,
+          })));
           batch = [];
         }
       }
@@ -187,7 +198,18 @@ export const runFullPipeline = async (params: RunPipelineParams): Promise<Filter
 
   // Flush remaining
   if (batch.length > 0) {
-     await appendJobsToFile(outputFile, batch as any);
+    await appendJobsToFile(outputFile, batch.map(fj => ({
+      title: fj.title,
+      company: fj.company,
+      applyUrl: fj.application.url,
+      location: typeof fj.location === 'string' ? fj.location : fj.location.raw,
+      experience: typeof fj.experience === 'string' ? fj.experience : fj.experience.raw,
+      salary: fj.compensation?.raw || null,
+      postedDate: fj.temporal?.postedDate || null,
+      techStack: fj.skills?.matched?.length ? fj.skills.matched : (fj.skills?.required || []),
+      source: fj.metadata.source,
+      isHighMatch: fj.isHighMatch,
+    })));
   }
 
   return Array.from(dedupMap.values());
