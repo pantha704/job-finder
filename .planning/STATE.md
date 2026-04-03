@@ -1,50 +1,50 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
+milestone: v1.1
+milestone_name: ""
 status: planning
-last_updated: "2026-04-03T06:05:37.198Z"
+last_updated: "2026-04-03T15:30:00Z"
 progress:
-  total_phases: 5
-  completed_phases: 1
-  total_plans: 2
-  completed_plans: 1
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
 ---
 
 # STATE.md — Project Memory
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-04-03)
+See: `.planning/PROJECT.md` (updated 2026-04-03 after v1.0)
 
-**Core value:** Produce `job_opportunities.md` with 150+ verified remote fresher job links, Rust/Solana/TS flagged
-**Current focus:** Phase 1 — Foundation (project setup, browser integration, ethics)
+**Core value:** Produce a ready-to-use `job_opportunities.md` with 150+ verified remote fresher job links, Rust/Solana/TS flagged
+**Current focus:** Planning next milestone (v1.1 or v2.0)
 
-## Current State
+## Shipped
 
-**Milestone:** v1.0
-**Phase:** 3
-**Status:** Ready to plan
-
-## What's Done
-
-- [x] Project initialized (git, config)
-- [x] Research complete (STACK, FEATURES, ARCHITECTURE, PITFALLS, SUMMARY)
-- [x] Requirements defined (32 v1 requirements)
-- [x] Roadmap created (5 phases, 100% coverage)
+- ✅ **v1.0 — Single-Run Job Scraper** (2026-04-03)
+  - 5 phases, 32 requirements, 3,154 LOC
+  - Published @pantha704/job-finder@1.0.7 on npm
+  - 254 jobs found, 22 HIGH MATCH
+  - Archive: `.planning/milestones/v1.0-ROADMAP.md`
 
 ## Key Context for Next Agent
 
-1. **Camoufox ≠ Chrome CDP** — uses Firefox Juggler protocol via Playwright, not `http://localhost:9377/json/version`
+1. **Camoufox ≠ Chrome CDP** — uses Firefox Juggler protocol via Playwright
 2. **Bun is required** — not Node.js, not npm
 3. **3s delay mandatory** between requests — ethical constraint
 4. **Output file**: `./job_opportunities.md` (project root)
-5. **Success threshold**: 150+ unique jobs after dedup+filter
-6. **HIGH MATCH keywords**: Rust, Solana, TypeScript, Next.js
+5. **HIGH MATCH keywords**: Rust, Solana, TypeScript, Next.js
 
 ## Blockers
 
-None.
+None — v1.0 milestone complete.
+
+## Tech Debt Carrying Forward
+
+- No unit test suite
+- 6 blocked sources (Wellfound CAPTCHA, Remotive/Jobicy/WWR 403, LinkedIn 429, Himalayas SPA)
+- REQUIREMENTS.md traceability incomplete for Phase 3-5
 
 ---
-*STATE.md initialized: 2026-04-03*
+*STATE.md updated: 2026-04-03 after v1.0 milestone*

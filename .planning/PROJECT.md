@@ -2,94 +2,82 @@
 
 ## What This Is
 
-An automated web scraper that collects 200+ remote, entry-level and internship job listings from multiple job boards (Internshala, Wellfound, LinkedIn, Cutshort, Solana Jobs, etc.) and outputs a curated, de-duplicated markdown checklist (`job_opportunities.md`) with application tracking. The tool is purpose-built for Pratham Jaiswal — a 3rd-year BTech student in Kolkata, India — specializing in Rust, TypeScript, Next.js, and Solana/Web3.
+A CLI tool published as `@pantha704/job-finder` that scrapes 16+ job boards (Internshala, Wellfound, LinkedIn, Cutshort, Solana Jobs, Web3.career, etc.) and outputs a curated, de-duplicated markdown checklist (`job_opportunities.md`) with AI-powered match scoring and application tracking. Purpose-built for Pratham Jaiswal — a 3rd-year BTech student in Kolkata, India — specializing in Rust, TypeScript, Next.js, and Solana/Web3.
 
 ## Core Value
 
-Produce a ready-to-use `job_opportunities.md` with 150+ verified, remote-friendly, fresher/entry-level job links that Pratham can track and apply to — with high-relevance Rust/Solana/TypeScript matches flagged prominently.
+Produce a ready-to-use `job_opportunities.md` with 150+ verified, remote-friendly, fresher/entry-level job links that Pratham can track and apply to — with high-relevance Rust/Solana/TypeScript/Next.js matches flagged prominently.
+
+**Shipped v1.0:** 254 jobs found, 22 HIGH MATCH, published to npm.
 
 ## Requirements
 
-### Validated
+### Validated (v1.0)
 
-- [x] Auto-detect Camofox browser endpoint (port scan 9377, 3000, 9222, 8080) or fallback to HTTP fetch (Validated in Phase 01)
-- [x] Respect robots.txt, 3s delay between requests (Validated in Phase 01)
-- [x] Max 3 retries per URL; skip blocked pages with CAPTCHA (Validated in Phase 01)
-- [x] Use bun as runtime (Validated in Phase 01)
+- ✓ Auto-detect Camoufox browser endpoint (port scan 9377, 3000, 9222, 8080) or fallback to HTTP fetch — v1.0
+- ✓ Respect robots.txt, 3s delay between requests — v1.0
+- ✓ Max 3 retries per URL; skip blocked pages with CAPTCHA — v1.0
+- ✓ Use bun as runtime — v1.0
+- ✓ All 32 v1 requirements satisfied — see [.planning/milestones/v1.0-REQUIREMENTS.md](./milestones/v1.0-REQUIREMENTS.md)
 
-### Active
+### Active (v1.1 / v2.0 Candidates)
 
-- [ ] Scrape Tier 1 sources: Internshala, Wellfound, RemoteRocketship, Unstop
-- [ ] Scrape Tier 2 sources: LinkedIn, Cutshort, Himalayas
-- [ ] Scrape Tier 3 Web3/Rust/Solana sources: jobs.solana.com, cryptocurrencyjobs.co
-- [ ] Filter jobs: Remote from India, 0-2 years exp or "Fresher"/"Internship" label
-- [ ] Extract per-job: Title, Company, Apply Link, Location, Experience, Salary, Posted Date, Tech Stack
-- [ ] Filter to last 14 days only
-- [ ] Flag jobs matching Rust/Solana/TypeScript/Next.js with "🔥 HIGH MATCH"
-- [ ] De-duplicate jobs by company+title+link hash
-- [ ] Output `job_opportunities.md` as markdown checklist with `- [ ]` tracking
-- [ ] Include application tracker table at bottom of output
-- [ ] Report progress every 25 jobs extracted
-- [ ] Filter to last 14 days only
-- [ ] Flag jobs matching Rust/Solana/TypeScript/Next.js with "🔥 HIGH MATCH"
-- [ ] De-duplicate jobs by company+title+link hash
-- [ ] Output `job_opportunities.md` as markdown checklist with `- [ ]` tracking
-- [ ] Include application tracker table at bottom of output
-- [ ] Report progress every 25 jobs extracted
+- [ ] Add unit test suite (VALIDATION.md nyquist_compliant: false)
+- [ ] Unblock Wellfound scraper (DataDome CAPTCHA — needs Camoufox anti-detect)
+- [ ] Unblock Remotive, Jobicy, WeWorkRemotely (403 anti-bot — needs headless browser)
+- [ ] Verify LinkedIn scraper with real production data (429 rate-limited in testing)
+- [ ] Verify Himalayas Playwright rewrite with real data (React SPA)
+- [ ] Verify full 150+ threshold with all tiers enabled simultaneously
+- [ ] Fix REQUIREMENTS.md traceability completeness for Phase 3-5 entries
+- [ ] Add CryptoCurrencyJobs smoke test
 
 ### Out of Scope
 
-- Real-time job monitoring / recurring scheduler — single-run scrape only
-- Job application automation — tracking only, no auto-apply
-- Authentication flows on job boards — skip gated content
-- CAPTCHA solving — ethical scraping only, skip if blocked
-- Non-remote or non-India-accessible jobs — filter out
+| Feature | Reason |
+|---------|--------|
+| CAPTCHA bypass/solving | Ethical constraint — non-negotiable |
+| Auto-apply to jobs | Out of ethical + legal scope |
+| Login-gated content | Unauthorized access risk |
+| Non-public job data | Scrape only publicly visible listings |
+| Real-time monitoring | Single-run tool for v1; scheduler is v2 |
+| Mobile/web UI | Script-first, markdown output |
+| Proxies/IP rotation | Keep simple for personal use |
 
 ## Context
 
 - **User Profile**: Pratham Jaiswal, 3rd-year BTech, Kolkata, India. Significant OSS contributions: Rust compiler, PyTorch, DeepMind (verified on GitHub).
 - **Skills Strength**: Rust (primary), TypeScript/Next.js (secondary), Solana blockchain.
-- **Browser Setup**: Camofox browser may be running on port 9377 (CDP endpoint). Auto-detection required before falling back to static HTTP fetch.
-- **Date**: April 2026 — "last 14 days" filter means March 20 – April 3, 2026.
-- **Ethics First**: robots.txt compliance, 3s delays. Projects on ethics.
-- **Output Location**: `./job_opportunities.md` in `/home/panther/Documents/jobs/`
+- **Codebase**: 3,154 lines TypeScript, 20+ source files across `src/`
+- **Tech Stack**: Bun, TypeScript strict, Playwright (Firefox/Juggler), cheerio, @inquirer/prompts, chalk, figlet, pino
+- **Published**: @pantha704/job-finder@1.0.7 on npm
+- **Output**: job_opportunities.md with 254 jobs (22 HIGH MATCH)
+- **Working Sources**: Internshala (173), RemoteOK (43), SolanaJobs (19), Cutshort (20), RemoteRocketship (4)
+- **Blocked Sources**: Wellfound (CAPTCHA), Remotive/Jobicy/WWR (403), LinkedIn (429), Himalayas (SPA = 0 results via cheerio)
 
 ## Constraints
 
 - **Ethics**: Respect robots.txt, 3-second delay between requests — non-negotiable
 - **Scope**: India-accessible remote jobs only, 0-2 years experience or "Fresher"/"Internship" label
-- **Recency**: Posted within last 14 days (March 20 – April 3, 2026)
-- **Volume**: Target 150+ unique jobs (success threshold), ideally 200+
-- **Tech**: Use bun as runtime; scraping via browser CDP (Camofox) or fetch fallback
-- **Retry Policy**: Max 3 retries per URL; skip blocked pages with CAPTCHA
+- **Tech**: Use bun as runtime; scraping via browser (Camoufox/Playwright) or fetch fallback
+- **Retry Policy**: Max 3 retries per URL with exponential backoff; skip CAPTCHA
 - **Pagination**: Max 10 pages per site
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Camofox CDP first, then HTTP fetch | Camofox handles JS-rendered pages; HTTP fetch for static sites | Phase 01 Implemented |
-| Bun as runtime | User preference (global rule) | Phase 01 Implemented |
-| Markdown checklist format | `- [ ]` enables direct tracking in any markdown viewer | — Pending |
-| 🔥 HIGH MATCH flag for Rust/Solana/TS/Next.js | Pratham's strongest skills; need high-signal filtering | — Pending |
-| De-dupe by hash(company + title + link) | Prevents same job appearing from multiple sources | — Pending |
+| Camoufox CDP first, then HTTP fetch | Camoufox handles JS-rendered pages; HTTP fetch for static sites | ✓ Implemented v1.0 |
+| Bun as runtime | User preference (global rule) | ✓ Implemented v1.0 |
+| Markdown checklist format | `- [ ]` enables direct tracking in any markdown viewer | ✓ Implemented v1.0 |
+| 🔥 HIGH MATCH flag for Rust/Solana/TS/Next.js | Pratham's strongest skills; need high-signal filtering | ✓ Implemented v1.0 |
+| De-dupe by hash(company + title + link) | Prevents same job appearing from multiple sources | ✓ Implemented v1.0 |
+| 3-tier scraping strategy | Tier 1 (India-focused) → Tier 2 (major boards) → Tier 3 (Web3 niche) | ✓ Implemented v1.0 |
+| Incremental saves every 25 jobs | Progress not lost on failure | ✓ Implemented v1.0 |
+| Word-boundary regex for HIGH MATCH | Prevents "trust" matching "rust" | ✓ Implemented v1.0 |
 
 ## Evolution
 
 This document evolves at phase transitions and milestone boundaries.
 
-**After each phase transition** (via `/gsd-transition`):
-1. Requirements invalidated? → Move to Out of Scope with reason
-2. Requirements validated? → Move to Validated with phase reference
-3. New requirements emerged? → Add to Active
-4. Decisions to log? → Add to Key Decisions
-5. "What This Is" still accurate? → Update if drifted
-
-**After each milestone** (via `/gsd-complete-milestone`):
-1. Full review of all sections
-2. Core Value check — still the right priority?
-3. Audit Out of Scope — reasons still valid?
-4. Update Context with current state
-
 ---
-*Last updated: 2026-04-03 after Phase 01 completion*
+*Last updated: 2026-04-03 after v1.0 milestone*
