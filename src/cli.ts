@@ -6,7 +6,7 @@ import chalk from "chalk";
 import figlet from "figlet";
 import { runInteractiveMode } from "./prompts/interactive";
 import { runFullPipeline } from "./index";
-import { writeMarkdownReport } from "./formatter";
+import { writeMarkdownReport, writeJsonReport, writeCsvReport } from "./formatter";
 import { DEFAULT_OPTIONS } from "./config/defaults";
 import type { PipelineOptions } from "./types/options";
 import { logger } from "./utils/logger";
@@ -211,15 +211,28 @@ const main = async () => {
     });
 
     const highMatches = results.filter((j) => j.isHighMatch).length;
-    // Resolve to absolute path so user always knows where to find the file
-    const rawOutput = finalOptions.output || 'job_opportunities.md';
-    const outputExt = rawOutput.endsWith('.md') ? rawOutput : rawOutput + '.md';
-    const absOutput = resolve(process.cwd(), outputExt);
-    
-    await writeMarkdownReport(absOutput, results, finalOptions);
-    
+    const format = finalOptions.format || 'md';
+    const baseOutput = finalOptions.output || 'job_opportunities';
+
+    const writeTasks: Promise<void>[] = [];
+    if (format === 'md' || format === 'all') {
+      const path = resolve(process.cwd(), baseOutput.endsWith('.md') ? baseOutput : baseOutput + '.md');
+      writeTasks.push(writeMarkdownReport(path, results, finalOptions));
+    }
+    if (format === 'json' || format === 'all') {
+      const path = resolve(process.cwd(), baseOutput.endsWith('.json') ? baseOutput : baseOutput + '.json');
+      writeTasks.push(writeJsonReport(path, results, finalOptions));
+    }
+    if (format === 'csv' || format === 'all') {
+      const path = resolve(process.cwd(), baseOutput.endsWith('.csv') ? baseOutput : baseOutput + '.csv');
+      writeTasks.push(writeCsvReport(path, results));
+    }
+
+    await Promise.all(writeTasks);
+
+    const formatLabel = format === 'all' ? 'md + json + csv' : format.toUpperCase();
     console.log(chalk.green(`\n✨ Done! ${results.length} jobs • ${highMatches} 🔥 HIGH MATCH`));
-    console.log(chalk.cyan(`💾 Saved: ${absOutput}`));
+    console.log(chalk.cyan(`💾 Saved as ${formatLabel}: ${baseOutput}`));
     console.log(chalk.yellow(`💡 Apply to HIGH MATCH jobs within 48 hours!`));
 
     process.exit(0);

@@ -66,3 +66,62 @@ export async function writeMarkdownReport(filePath: string, jobs: FilteredJob[],
   const content = generateMarkdownReport(jobs, options);
   await fs.writeFile(filePath, content);
 }
+
+export function generateJsonReport(jobs: FilteredJob[], options: PipelineOptions): string {
+  return JSON.stringify({
+    generated: new Date().toISOString(),
+    profile: { roles: options.roles, experience: options.experience, locationScope: options.locationScope },
+    total: jobs.length,
+    highMatchCount: jobs.filter(j => j.isHighMatch).length,
+    jobs: jobs.map(j => ({
+      title: j.title,
+      company: j.company,
+      location: j.location.raw,
+      experience: j.experience.raw,
+      workType: j.workType,
+      compensation: j.compensation.raw || null,
+      skills: j.skills.matched.length ? j.skills.matched : j.skills.required,
+      isHighMatch: j.isHighMatch,
+      matchScore: Math.round(j.matchScore),
+      url: j.application.url,
+      source: j.metadata.source,
+      postedDate: j.temporal.postedDate.toISOString(),
+    })),
+  }, null, 2);
+}
+
+export async function writeJsonReport(filePath: string, jobs: FilteredJob[], options: PipelineOptions) {
+  const content = generateJsonReport(jobs, options);
+  await fs.writeFile(filePath, content);
+}
+
+export function generateCsvReport(jobs: FilteredJob[]): string {
+  const headers = ['Title', 'Company', 'Location', 'Experience', 'WorkType', 'Compensation', 'Skills', 'HighMatch', 'Score', 'URL', 'Source', 'PostedDate'];
+  const rows = [headers.join(',')];
+
+  for (const j of jobs) {
+    const skills = (j.skills.matched.length ? j.skills.matched : j.skills.required).join('; ');
+    const escape = (s: string) => `"${s.replace(/"/g, '""')}"`;
+    rows.push([
+      escape(j.title),
+      escape(j.company),
+      escape(j.location.raw),
+      escape(j.experience.raw),
+      escape(j.workType),
+      escape(j.compensation.raw || ''),
+      escape(skills),
+      j.isHighMatch ? 'true' : 'false',
+      String(Math.round(j.matchScore)),
+      escape(j.application.url),
+      escape(j.metadata.source),
+      j.temporal.postedDate.toISOString(),
+    ].join(','));
+  }
+
+  return rows.join('\n');
+}
+
+export async function writeCsvReport(filePath: string, jobs: FilteredJob[]) {
+  const content = generateCsvReport(jobs);
+  await fs.writeFile(filePath, content);
+}
