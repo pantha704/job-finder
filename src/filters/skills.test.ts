@@ -19,35 +19,40 @@ describe("scoreSkillsMatch — default skills", () => {
     const job = makeJob("Rust Developer");
     const score = scoreSkillsMatch(job, {} as PipelineOptions);
     expect(score).toBeGreaterThanOrEqual(15);
-    expect(job.isHighMatch).toBe(true);
+    expect(job.skills.highlight).toBe(true);
+    expect(job.skills.matched).toContain("rust");
   });
 
   test("scores 15 for 'Solana' in title", () => {
     const job = makeJob("Solana Engineer");
     const score = scoreSkillsMatch(job, {} as PipelineOptions);
     expect(score).toBeGreaterThanOrEqual(15);
-    expect(job.isHighMatch).toBe(true);
+    expect(job.skills.highlight).toBe(true);
+    expect(job.skills.matched).toContain("solana");
   });
 
   test("scores 15 for 'web3' in skills", () => {
     const job = makeJob("Backend Developer", ["web3"]);
     const score = scoreSkillsMatch(job, {} as PipelineOptions);
     expect(score).toBeGreaterThanOrEqual(15);
-    expect(job.isHighMatch).toBe(true);
+    expect(job.skills.highlight).toBe(true);
+    expect(job.skills.matched).toContain("web3");
   });
 
   test("scores 10 for 'TypeScript' in title", () => {
     const job = makeJob("TypeScript Developer");
     const score = scoreSkillsMatch(job, {} as PipelineOptions);
     expect(score).toBeGreaterThanOrEqual(10);
-    expect(job.isHighMatch).toBe(true);
+    expect(job.skills.highlight).toBe(true);
+    expect(job.skills.matched).toContain("typescript");
   });
 
   test("scores 10 for 'Next.js' in skills", () => {
     const job = makeJob("Frontend Developer", ["next.js"]);
     const score = scoreSkillsMatch(job, {} as PipelineOptions);
     expect(score).toBeGreaterThanOrEqual(10);
-    expect(job.isHighMatch).toBe(true);
+    expect(job.skills.highlight).toBe(true);
+    expect(job.skills.matched).toContain("next.js");
   });
 
   test("scores 10 for 'NextJS' in skills", () => {
@@ -83,14 +88,16 @@ describe("scoreSkillsMatch — word boundary check", () => {
   test("'rust' DOES match standalone 'rust'", () => {
     const job = makeJob("Rust Developer");
     const score = scoreSkillsMatch(job, {} as PipelineOptions);
-    expect(job.isHighMatch).toBe(true);
+    expect(score).toBeGreaterThanOrEqual(15);
+    expect(job.skills.highlight).toBe(true);
     expect(job.skills.matched).toContain("rust");
   });
 
   test("'solana' DOES match standalone 'solana'", () => {
     const job = makeJob("Solana Smart Contracts");
     const score = scoreSkillsMatch(job, {} as PipelineOptions);
-    expect(job.isHighMatch).toBe(true);
+    expect(score).toBeGreaterThanOrEqual(15);
+    expect(job.skills.highlight).toBe(true);
     expect(job.skills.matched).toContain("solana");
   });
 });
@@ -122,7 +129,8 @@ describe("scoreSkillsMatch — highlightSkills", () => {
     const score = scoreSkillsMatch(job, opts);
     // Rust (15) + React default (5) + React highlight (15) — but react already matched via default
     // So: rust 15 + react 5 (default) + react would be skipped since already matched
-    expect(job.isHighMatch).toBe(true);
+    expect(score).toBeGreaterThanOrEqual(15);
+    expect(job.skills.highlight).toBe(true);
     expect(job.skills.matched).toContain("rust");
     expect(job.skills.matched).toContain("react");
   });
