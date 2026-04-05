@@ -48,6 +48,26 @@ export async function scrapeWeb3Career(): Promise<Job[]> {
           const dedupKey = `${company.toLowerCase().trim()}-${title.toLowerCase().trim()}`;
           if (jobs.some(x => `${x.company.toLowerCase().trim()}-${x.title.toLowerCase().trim()}` === dedupKey)) return;
 
+          // Determine seniority from title and description
+          const fullText = `${title} ${data.description || ''}`.toLowerCase();
+          let experience = 'Entry Level';
+
+          // 1. Check Title first (most reliable signal)
+          if (title.toLowerCase().match(/senior|lead|principal|vp |vice president|director|head of|cto|cfo/)) {
+            experience = 'Senior';
+          } else if (title.toLowerCase().match(/intern|junior|entry|trainee|apprentice/)) {
+            experience = 'Fresher';
+          } else {
+            // 2. Fallback to description analysis
+            if (fullText.includes('senior') || fullText.includes('5+ year') || fullText.includes('manager')) {
+              experience = 'Senior';
+            } else if (fullText.includes('intern') || fullText.includes('junior') || fullText.includes('entry level') || fullText.includes('0-2 year')) {
+              experience = 'Fresher';
+            } else if (fullText.includes('mid') || fullText.includes('3+ year')) {
+              experience = 'Junior';
+            }
+          }
+
           const location = data.jobLocation?.address?.addressCountry || data.applicantLocationRequirements?.name || 'Remote';
           const salary = data.baseSalary
             ? `${data.baseSalary.value?.minValue || data.baseSalary.value?.value || data.baseSalary.value || ''} ${data.baseSalary.currency || ''}`
@@ -70,7 +90,7 @@ export async function scrapeWeb3Career(): Promise<Job[]> {
             company,
             applyUrl: url,
             location,
-            experience: 'Entry Level',
+            experience,
             salary: salary || null,
             postedDate: data.datePosted ? new Date(data.datePosted) : null,
             techStack,
