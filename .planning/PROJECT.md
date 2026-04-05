@@ -10,17 +10,17 @@ Produce a ready-to-use `job_opportunities.md` with 150+ verified, remote-friendl
 
 **Shipped v1.0:** 254 jobs found, 22 HIGH MATCH, published to npm.
 
-## Current Milestone: v2.0 — CLI Enhancements
+## Current Milestone: v3.0 — AI-Powered Intelligence
 
-**Goal:** Add CLI enhancements: salary range filter, company size filter, company blacklist, interactive job browser, and CSV/JSON export formats.
+**Goal:** Add AI-powered job matching, auto-apply workflows, and expand scraper coverage.
 
 **Target features:**
-- Salary range filter (min INR)
-- Company size filter (startup vs enterprise)
-- Company blacklist (exclude specific companies)
-- Interactive job browser
-- Export to CSV/JSON formats
-- SQLite persistence for seen jobs across runs
+- AI job matching (Groq LLM scores each job against Pratham's full profile)
+- Auto-apply via browser automation (agent-browser + saved profile)
+- LinkedIn scraper (requires auth cookie)
+- Email alerts for new HIGH MATCH jobs
+- Job recommendation engine (learns from applied/saved/rejected)
+- Web dashboard (optional, lightweight)
 
 ## Requirements
 
