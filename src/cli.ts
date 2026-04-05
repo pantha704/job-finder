@@ -70,6 +70,7 @@ const parseCliArgs = (): Partial<PipelineOptions> => {
       headless: { type: "boolean" },
       "max-pages": { type: "string", short: "m" },
       verbose: { type: "boolean", short: "v" },
+      browse: { type: "boolean", short: "b" },
       status: { type: "boolean" },
       history: { type: "boolean" },
       help: { type: "boolean", short: "h" },
@@ -145,6 +146,13 @@ const main = async () => {
     console.log(`  Applied: ${stats.applied || 0}`);
     console.log(`  Saved: ${stats.saved || 0}`);
     console.log(`  Rejected: ${stats.rejected || 0}`);
+    process.exit(0);
+  }
+
+  // Handle browse command
+  if (vals.browse) {
+    const { browseJobs } = await import("./tui/browser");
+    await browseJobs({ source: 'history' });
     process.exit(0);
   }
 
