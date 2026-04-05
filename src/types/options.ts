@@ -79,6 +79,7 @@ export interface PipelineOptions {
   rateLimit?: number;
   respectRobotsTxt?: boolean;
   verbose?: boolean;
+  aiApiKey?: string; // Groq or NVIDIA NIM API key for AI verification
 
   browser?: {
     backend: 'camoufox' | 'puppeteer' | 'playwright' | 'firecrawl';

@@ -6,6 +6,7 @@ import { writeJobToOutput } from "./utils/output";
 import { normalizeLocation, matchesLocationFilter, scoreLocationMatch } from "./filters/location";
 import { normalizeExperience, matchesExperienceFilter, scoreExperienceMatch } from "./filters/experience";
 import { scoreSkillsMatch } from "./filters/skills";
+import { analyzeJobWithAI } from "./utils/llm_parser";
 
 // Tier 1 Scrapers
 import { scrapeInternshala } from "./scrapers/internshala";
@@ -192,4 +193,47 @@ export const runFullPipeline = async (params: RunPipelineParams): Promise<Filter
   }
 
   return Array.from(dedupMap.values());
+};
+
+/**
+ * AI Verification Step:
+ * Runs High Match jobs through LLM to verify seniority and skill match.
+ * Removes jobs that are actually Senior-level or mismatch.
+ */
+export const verifyJobsWithAI = async (
+  jobs: FilteredJob[],
+  apiKey: string,
+  onProgress?: (current: number, total: number) => void
+): Promise<FilteredJob[]> => {
+  logger.info(`Starting AI verification for ${jobs.length} jobs...`);
+  const verified: FilteredJob[] = [];
+
+  for (let i = 0; i < jobs.length; i++) {
+    const job = jobs[i];
+    if (onProgress) onProgress(i + 1, jobs.length);
+
+    // Construct a rich description for the LLM
+    const description = [
+      job.title,
+      job.company,
+      job.skills.required.join(', '),
+      job.skills.matched.join(', '),
+    ].join(' | ');
+
+    const analysis = await analyzeJobWithAI(job.title, description, apiKey);
+
+    // AI Verdict: If the job is NOT fresher friendly, drop it.
+    if (!analysis.is_fresher_friendly || analysis.min_years > 2) {
+      logger.info(`[AI] Rejected: ${job.title} @ ${job.company} (${analysis.reason})`);
+      continue;
+    }
+
+    // Update job metadata with AI insights
+    job.warnings = [analysis.reason];
+    job.matchScore = analysis.match_confidence === 'high' ? job.matchScore + 10 : job.matchScore;
+    verified.push(job);
+  }
+
+  logger.info(`AI Verification complete: ${verified.length} jobs remain.`);
+  return verified;
 };

@@ -100,6 +100,7 @@ const parseCliArgs = (): Partial<PipelineOptions> => {
     showScore: values.score as boolean | undefined,
     sources: toArray(values.sources),
     maxPagesPerSource: values["max-pages"] ? parseInt(values["max-pages"] as string) : undefined,
+    aiApiKey: process.env.GROQ_API_KEY || process.env.NVAPI_KEY,
     browser: {
       backend: (values.browser as any) || DEFAULT_OPTIONS.browser?.backend,
       headless: values.headless as boolean | undefined,
@@ -210,22 +211,38 @@ const main = async () => {
       },
     });
 
-    const highMatches = results.filter((j) => j.isHighMatch).length;
+    // AI Verification Step (Optional)
+    let finalResults = results;
+    if (finalOptions.aiApiKey) {
+      console.log(chalk.yellow(`\n🤖 Verifying ${results.filter(j => j.isHighMatch).length} HIGH MATCH jobs with AI...`));
+      const { verifyJobsWithAI } = await import("./index");
+      finalResults = await verifyJobsWithAI(
+        results.filter(j => j.isHighMatch),
+        finalOptions.aiApiKey,
+        (current, total) => {
+          process.stdout.write(`\r🔍 AI Checking: ${current}/${total}`);
+        }
+      );
+      // Re-add non-high-match jobs that weren't verified
+      finalResults = [...finalResults, ...results.filter(j => !j.isHighMatch)];
+    }
+
+    const highMatches = finalResults.filter((j) => j.isHighMatch).length;
     const format = finalOptions.format || 'md';
     const baseOutput = finalOptions.output || 'job_opportunities';
 
     const writeTasks: Promise<void>[] = [];
     if (format === 'md' || format === 'all') {
       const path = resolve(process.cwd(), baseOutput.endsWith('.md') ? baseOutput : baseOutput + '.md');
-      writeTasks.push(writeMarkdownReport(path, results, finalOptions));
+      writeTasks.push(writeMarkdownReport(path, finalResults, finalOptions));
     }
     if (format === 'json' || format === 'all') {
       const path = resolve(process.cwd(), baseOutput.endsWith('.json') ? baseOutput : baseOutput + '.json');
-      writeTasks.push(writeJsonReport(path, results, finalOptions));
+      writeTasks.push(writeJsonReport(path, finalResults, finalOptions));
     }
     if (format === 'csv' || format === 'all') {
       const path = resolve(process.cwd(), baseOutput.endsWith('.csv') ? baseOutput : baseOutput + '.csv');
-      writeTasks.push(writeCsvReport(path, results));
+      writeTasks.push(writeCsvReport(path, finalResults));
     }
 
     await Promise.all(writeTasks);
