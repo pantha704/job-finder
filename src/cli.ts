@@ -8,6 +8,7 @@ import { runInteractiveMode } from "./prompts/interactive";
 import { runFullPipeline } from "./index";
 import { writeMarkdownReport, writeJsonReport, writeCsvReport } from "./formatter";
 import { DEFAULT_OPTIONS } from "./config/defaults";
+import { loadUserConfig, mergeConfig, getConfigPath } from "./config/userConfig";
 import type { PipelineOptions } from "./types/options";
 import { logger } from "./utils/logger";
 
@@ -134,6 +135,10 @@ const main = async () => {
 
   const cliOptions = parseCliArgs();
   const vals = cliOptions as any;
+
+  // Load user config and merge with CLI args
+  const userConfig = loadUserConfig();
+  const finalOptions: Partial<PipelineOptions> = mergeConfig(userConfig, cliOptions);
 
   // Handle status command
   if (vals.status) {
