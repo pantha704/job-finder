@@ -6,6 +6,8 @@ import { writeJobToOutput } from "./utils/output";
 import { normalizeLocation, matchesLocationFilter, scoreLocationMatch } from "./filters/location";
 import { normalizeExperience, matchesExperienceFilter, scoreExperienceMatch } from "./filters/experience";
 import { scoreSkillsMatch } from "./filters/skills";
+import { normalizeSalary, matchesSalaryFilter, scoreSalaryMatch } from "./filters/salary";
+import { matchesCompanyFilter, scoreCompanyMatch } from "./filters/company";
 import { analyzeJobWithAI } from "./utils/llm_parser";
 
 // Tier 1 Scrapers
@@ -143,12 +145,16 @@ export const runFullPipeline = async (params: RunPipelineParams): Promise<Filter
         // Pass through filters
         if (!matchesLocationFilter(filteredJob, params)) continue;
         if (!matchesExperienceFilter(filteredJob, params)) continue;
+        if (!matchesSalaryFilter(filteredJob, params)) continue;
+        if (!matchesCompanyFilter(filteredJob, params)) continue;
 
         // Apply scoring (Priority scoring & India-first based on params)
         let score = 0;
         score += scoreLocationMatch(filteredJob, params);
         score += scoreExperienceMatch(filteredJob, params);
         score += scoreSkillsMatch(filteredJob, params);
+        score += scoreSalaryMatch(filteredJob, params);
+        score += scoreCompanyMatch(filteredJob, params);
 
         filteredJob.matchScore = score;
         if (score >= 40) {
