@@ -248,7 +248,7 @@ const main = async () => {
     await Promise.all(writeTasks);
 
     const formatLabel = format === 'all' ? 'md + json + csv' : format.toUpperCase();
-    console.log(chalk.green(`\n✨ Done! ${results.length} jobs • ${highMatches} 🔥 HIGH MATCH`));
+    console.log(chalk.green(`\n✨ Done! ${finalResults.length} jobs • ${highMatches} 🔥 HIGH MATCH`));
     console.log(chalk.cyan(`💾 Saved as ${formatLabel}: ${baseOutput}`));
     console.log(chalk.yellow(`💡 Apply to HIGH MATCH jobs within 48 hours!`));
 
