@@ -72,6 +72,7 @@ const parseCliArgs = (): Partial<PipelineOptions> => {
       "max-pages": { type: "string", short: "m" },
       verbose: { type: "boolean", short: "v" },
       browse: { type: "boolean", short: "b" },
+      "ai-verify": { type: "boolean" },
       status: { type: "boolean" },
       history: { type: "boolean" },
       help: { type: "boolean", short: "h" },
@@ -138,7 +139,7 @@ const main = async () => {
 
   // Load user config and merge with CLI args
   const userConfig = loadUserConfig();
-  const finalOptions: Partial<PipelineOptions> = mergeConfig(userConfig, cliOptions);
+  const mergedOptions: Partial<PipelineOptions> = mergeConfig(userConfig, cliOptions);
 
   // Handle status command
   if (vals.status) {
@@ -237,7 +238,7 @@ const main = async () => {
     process.exit(0);
   }
 
-  const baseOptions: PipelineOptions = { ...DEFAULT_OPTIONS, ...cliOptions };
+  const baseOptions: PipelineOptions = { ...DEFAULT_OPTIONS, ...mergedOptions } as PipelineOptions;
 
   const hasMinimalConfig = baseOptions.roles?.length && baseOptions.sources?.length;
   const finalOptions = !hasMinimalConfig

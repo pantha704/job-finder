@@ -2,14 +2,13 @@ import type { PipelineOptions, FilteredJob } from "./types/options";
 import type { Job } from "./types";
 import { logger } from "./utils/logger";
 import { generateDedupKey, mergeJobs, validateUrl } from "./dedup";
-import { writeJobToOutput } from "./utils/output";
 import { normalizeLocation, matchesLocationFilter, scoreLocationMatch } from "./filters/location";
 import { normalizeExperience, matchesExperienceFilter, scoreExperienceMatch } from "./filters/experience";
 import { scoreSkillsMatch } from "./filters/skills";
 import { normalizeSalary, matchesSalaryFilter, scoreSalaryMatch } from "./filters/salary";
 import { matchesCompanyFilter, scoreCompanyMatch } from "./filters/company";
 import { analyzeJobWithAI } from "./utils/llm_parser";
-import { findJob, upsertJobs, closeDb } from "./db/jobs";
+import { findJob, upsertJobs, closeDb, getJobIdsByStatus } from "./db/jobs";
 
 // Tier 1 Scrapers
 import { scrapeInternshala } from "./scrapers/internshala";
@@ -75,7 +74,10 @@ export const runFullPipeline = async (params: RunPipelineParams): Promise<Filter
 
   const sources = params.sources || Object.keys(SCRAPERS);
   const dedupMap = new Map<string, FilteredJob>();
-  
+
+  // Pre-load applied job IDs into a Set for O(1) lookup (fixes N+1 query issue)
+  const appliedJobs = getJobIdsByStatus('applied');
+
   let totalSaved = 0;
   let batch: FilteredJob[] = [];
   const outputFile = params.output || 'job_opportunities.md';
@@ -173,9 +175,8 @@ export const runFullPipeline = async (params: RunPipelineParams): Promise<Filter
            continue;
         }
 
-        // Check SQLite persistence for previously seen jobs
-        const persisted = findJob(dedupKey);
-        if (persisted && persisted.status === 'applied') {
+        // Check SQLite persistence for previously seen jobs (O(1) Set lookup)
+        if (appliedJobs.has(dedupKey)) {
            // Skip jobs already marked as applied by the user
            continue;
         }
@@ -216,6 +217,7 @@ export const runFullPipeline = async (params: RunPipelineParams): Promise<Filter
           matchScore: job.matchScore,
           isHighMatch: job.isHighMatch,
         })));
+        batch = []; // Clear batch after persisting (fixes duplicate inserts)
       }
     } catch (err) {
       logger.error({ err }, `Error scraping ${source}`);

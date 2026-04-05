@@ -145,13 +145,13 @@ export async function browseJobs(options?: BrowseOptions): Promise<void> {
     switch (action) {
       case 'open':
         console.log(chalk.cyan(`\n🔗 Opening: ${selectedJob.applyUrl}\n`));
-        // Open URL in browser (platform-agnostic)
-        const { execSync } = await import('child_process');
-        try {
-          execSync(`xdg-open "${selectedJob.applyUrl}" 2>/dev/null || open "${selectedJob.applyUrl}" 2>/dev/null || echo "Could not open browser. URL: ${selectedJob.applyUrl}"`, { stdio: 'pipe' });
-        } catch {
-          console.log(chalk.yellow(`Could not auto-open. URL: ${selectedJob.applyUrl}`));
-        }
+        // Open URL in browser using non-blocking Bun.spawn
+        const platform = process.platform;
+        const openCmd = platform === 'darwin' ? 'open' : platform === 'win32' ? 'start' : 'xdg-open';
+        Bun.spawn([openCmd, selectedJob.applyUrl], {
+          stdout: "inherit",
+          stderr: "inherit",
+        });
         break;
 
       case 'applied':

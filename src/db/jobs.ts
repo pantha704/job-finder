@@ -21,7 +21,11 @@ export interface JobRecord {
 const DB_DIR = join(homedir(), '.job-finder');
 const DB_PATH = join(DB_DIR, 'jobs.db');
 
+const CURRENT_SCHEMA_VERSION = 1;
+
 const CREATE_TABLES = `
+PRAGMA user_version = ${CURRENT_SCHEMA_VERSION};
+
 CREATE TABLE IF NOT EXISTS job_records (
   id TEXT PRIMARY KEY,
   title TEXT NOT NULL,
@@ -140,6 +144,26 @@ export function getStats(): Record<string, number> {
     stats.total += row.count;
   }
   return stats;
+}
+
+/**
+ * Get all job IDs from the database as a Set for fast lookup.
+ */
+export function getAllJobIds(): Set<string> {
+  const db = getDb();
+  const stmt = db.prepare("SELECT id FROM job_records");
+  const rows = stmt.all() as { id: string }[];
+  return new Set(rows.map(r => r.id));
+}
+
+/**
+ * Get all job records with a specific status as a Set of IDs.
+ */
+export function getJobIdsByStatus(status: JobStatus): Set<string> {
+  const db = getDb();
+  const stmt = db.prepare("SELECT id FROM job_records WHERE status = ?");
+  const rows = stmt.all(status) as { id: string }[];
+  return new Set(rows.map(r => r.id));
 }
 
 /**
