@@ -34,15 +34,16 @@ async function checkCamoufox(): Promise<boolean> {
  *
  * Returns { html, method } so callers know which path was taken.
  */
-export async function fetchRendered(url: string): Promise<{ html: string; method: 'camoufox' | 'playwright' | 'fetch' }> {
+export async function fetchRendered(url: string, options?: { headers?: Record<string, string> }): Promise<{ html: string; method: 'camoufox' | 'playwright' | 'fetch' }> {
   // ── 1. Camoufox REST API ──────────────────────────────────────────────────
   if (await checkCamoufox()) {
+    const cookie = options?.headers?.cookie || '';
     try {
       // Step 1: Open a tab
       const openRes = await fetch(`http://127.0.0.1:${CAMOUFOX_PORT}/tabs/open`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: SESSION_USER_ID, url, waitFor: 5000 }),
+        body: JSON.stringify({ userId: SESSION_USER_ID, url, waitFor: 5000, cookie }),
         signal: AbortSignal.timeout(30000),
       });
 

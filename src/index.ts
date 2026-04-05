@@ -11,6 +11,7 @@ import { analyzeJobWithAI } from "./utils/llm_parser";
 import { loadProfile, formatProfileForAI } from "./utils/profileLoader";
 import { batchScoreJobs, combineScores } from "./ai/matcher";
 import { upsertJobs, closeDb, getJobIdsByStatus } from "./db/jobs";
+import { adjustScores, analyzePatterns } from "./recommender/engine";
 
 // Tier 1 Scrapers
 import { scrapeInternshala } from "./scrapers/internshala";
@@ -259,6 +260,14 @@ export const runFullPipeline = async (params: RunPipelineParams): Promise<Filter
     // Re-sort by score
     finalJobs.sort((a, b) => b.matchScore - a.matchScore);
     logger.info(`AI matching complete — ${finalJobs.filter(j => j.isHighMatch).length} HIGH MATCH jobs`);
+  }
+
+  // Recommendation Engine: adjust scores based on user history
+  const patterns = analyzePatterns();
+  if (patterns.appliedCount >= 3) {
+    logger.info(`🧠 Adjusting scores based on ${patterns.appliedCount} previous applications`);
+    adjustScores(finalJobs, patterns);
+    finalJobs.sort((a, b) => b.matchScore - a.matchScore);
   }
 
   return finalJobs;

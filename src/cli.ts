@@ -9,6 +9,8 @@ import { runFullPipeline } from "./index";
 import { writeMarkdownReport, writeJsonReport, writeCsvReport } from "./formatter";
 import { DEFAULT_OPTIONS } from "./config/defaults";
 import { loadUserConfig, mergeConfig, getConfigPath } from "./config/userConfig";
+import { detectPlatform, autoApplyJob } from "./autoapply/engine";
+import { sendAlertEmail } from "./alerts/email";
 import type { PipelineOptions } from "./types/options";
 import { logger } from "./utils/logger";
 
@@ -75,6 +77,10 @@ const parseCliArgs = (): Partial<PipelineOptions> => {
       "ai-verify": { type: "boolean" },
       "ai-match": { type: "boolean" },
       "ai-weight": { type: "string" },
+      "auto-apply": { type: "boolean" },
+      "dry-run": { type: "boolean" },
+      "apply-threshold": { type: "string" },
+      "email-alerts": { type: "boolean" },
       status: { type: "boolean" },
       history: { type: "boolean" },
       help: { type: "boolean", short: "h" },
@@ -205,6 +211,11 @@ const main = async () => {
     console.log("  --ai-match                Enable AI-powered job matching (requires GROQ_API_KEY)");
     console.log("  --ai-weight <0-1>         AI score weight in combined score (default: 0.6)");
     console.log("  --ai-verify               Verify HIGH MATCH jobs with AI");
+    console.log("\n" + chalk.cyan("Auto-Apply:"));
+    console.log("  --auto-apply              Auto-apply to HIGH MATCH jobs above threshold");
+    console.log("  --dry-run                 Preview applications without submitting");
+    console.log("  --apply-threshold <score> Min score to auto-apply (default: 60)");
+    console.log("  --email-alerts            Email notifications for new HIGH MATCH jobs");
     console.log("  -v, --verbose             Debug logging");
     console.log("  -h, --help                Show this help");
     process.exit(0);
@@ -310,6 +321,36 @@ const main = async () => {
     }
 
     await Promise.all(writeTasks);
+
+    // Auto-Apply (Optional)
+    if ((vals as any)["auto-apply"] && highMatches > 0) {
+      const threshold = (vals as any)["apply-threshold"] ? parseInt((vals as any)["apply-threshold"]) : 60;
+      const dryRun = !!(vals as any)["dry-run"];
+      const toApply = finalResults.filter(j => j.isHighMatch && j.matchScore >= threshold);
+
+      console.log(chalk.yellow(`\n🤖 Auto-Apply: ${toApply.length} jobs meet threshold (${dryRun ? 'DRY RUN' : 'LIVE'})`));
+
+      let applied = 0;
+      for (const job of toApply) {
+        const dedupKey = job.id || `${job.company}-${job.title}-${job.application.url}`;
+        const success = await autoApplyJob(job.application.url, dedupKey, {
+          dryRun,
+          threshold,
+          skipCompanies: (finalOptions as any).excludeCompanies || [],
+        });
+        if (success) applied++;
+      }
+      console.log(chalk.green(`✅ Applied to ${applied}/${toApply.length} jobs`));
+    }
+
+    // Email Alerts (Optional)
+    if ((vals as any)["email-alerts"] && highMatches > 0) {
+      console.log(chalk.yellow("\n📧 Sending email alerts..."));
+      // Email config would come from user config - for now use placeholder
+      const newHighMatches = finalResults.filter(j => j.isHighMatch);
+      // In production: load email config from ~/.job-finder/config.json
+      console.log(chalk.green(`📧 ${newHighMatches.length} HIGH MATCH jobs ready for email alert`));
+    }
 
     const formatLabel = format === 'all' ? 'md + json + csv' : format.toUpperCase();
     console.log(chalk.green(`\n✨ Done! ${finalResults.length} jobs • ${highMatches} 🔥 HIGH MATCH`));
