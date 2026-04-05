@@ -8,6 +8,8 @@ import { scoreSkillsMatch } from "./filters/skills";
 import { normalizeSalary, matchesSalaryFilter, scoreSalaryMatch } from "./filters/salary";
 import { matchesCompanyFilter, scoreCompanyMatch } from "./filters/company";
 import { analyzeJobWithAI } from "./utils/llm_parser";
+import { loadProfile, formatProfileForAI } from "./utils/profileLoader";
+import { batchScoreJobs, combineScores } from "./ai/matcher";
 import { upsertJobs, closeDb, getJobIdsByStatus } from "./db/jobs";
 
 // Tier 1 Scrapers
@@ -225,7 +227,41 @@ export const runFullPipeline = async (params: RunPipelineParams): Promise<Filter
   }
 
   closeDb();
-  return Array.from(dedupMap.values());
+
+  const finalJobs = Array.from(dedupMap.values());
+
+  // AI Job Matching (optional, enabled via aiMatch flag)
+  if ((params as any).aiMatch && (params as any).aiApiKey) {
+    logger.info("🤖 Running AI job matching...");
+    const profile = loadProfile();
+    const profileText = formatProfileForAI(profile);
+    const aiWeight = (params as any).aiWeight ?? 0.6;
+
+    const aiScores = await batchScoreJobs(
+      finalJobs,
+      profileText,
+      (params as any).aiApiKey,
+      (params as any).aiConcurrency ?? 5
+    );
+
+    for (let i = 0; i < finalJobs.length; i++) {
+      const job = finalJobs[i];
+      const ai = aiScores[i];
+      if (ai) {
+        job.matchScore = combineScores(job.matchScore, ai.score, aiWeight);
+        job.warnings.push(`🤖 AI: ${ai.reasoning}`);
+        if (job.matchScore >= 40) {
+          job.isHighMatch = true;
+        }
+      }
+    }
+
+    // Re-sort by score
+    finalJobs.sort((a, b) => b.matchScore - a.matchScore);
+    logger.info(`AI matching complete — ${finalJobs.filter(j => j.isHighMatch).length} HIGH MATCH jobs`);
+  }
+
+  return finalJobs;
 };
 
 /**

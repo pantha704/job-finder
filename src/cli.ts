@@ -73,6 +73,8 @@ const parseCliArgs = (): Partial<PipelineOptions> => {
       verbose: { type: "boolean", short: "v" },
       browse: { type: "boolean", short: "b" },
       "ai-verify": { type: "boolean" },
+      "ai-match": { type: "boolean" },
+      "ai-weight": { type: "string" },
       status: { type: "boolean" },
       history: { type: "boolean" },
       help: { type: "boolean", short: "h" },
@@ -199,6 +201,10 @@ const main = async () => {
     console.log("\n" + chalk.cyan("Database:"));
     console.log("  --status                  Show job tracking statistics");
     console.log("  --history                 Show recent job history");
+    console.log("\n" + chalk.cyan("AI Features:"));
+    console.log("  --ai-match                Enable AI-powered job matching (requires GROQ_API_KEY)");
+    console.log("  --ai-weight <0-1>         AI score weight in combined score (default: 0.6)");
+    console.log("  --ai-verify               Verify HIGH MATCH jobs with AI");
     console.log("  -v, --verbose             Debug logging");
     console.log("  -h, --help                Show this help");
     process.exit(0);
@@ -253,6 +259,10 @@ const main = async () => {
   try {
     const results = await runFullPipeline({
       ...finalOptions,
+      aiMatch: !!(vals as any)["ai-match"],
+      aiApiKey: (finalOptions as any).aiApiKey || process.env.GROQ_API_KEY || process.env.NVAPI_KEY,
+      aiWeight: (vals as any)["ai-weight"] ? parseFloat((vals as any)["ai-weight"]) : undefined,
+      aiConcurrency: 5,
       onJobFound: (job, count, total) => {
         const score = finalOptions.showScore ? ` [${job.matchScore}/100]` : "";
         const highlight = job.isHighMatch ? chalk.redBright(" 🔥") : "";
