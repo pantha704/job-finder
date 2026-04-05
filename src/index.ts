@@ -8,7 +8,7 @@ import { scoreSkillsMatch } from "./filters/skills";
 import { normalizeSalary, matchesSalaryFilter, scoreSalaryMatch } from "./filters/salary";
 import { matchesCompanyFilter, scoreCompanyMatch } from "./filters/company";
 import { analyzeJobWithAI } from "./utils/llm_parser";
-import { findJob, upsertJobs, closeDb, getJobIdsByStatus } from "./db/jobs";
+import { upsertJobs, closeDb, getJobIdsByStatus } from "./db/jobs";
 
 // Tier 1 Scrapers
 import { scrapeInternshala } from "./scrapers/internshala";
