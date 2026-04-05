@@ -70,6 +70,8 @@ const parseCliArgs = (): Partial<PipelineOptions> => {
       headless: { type: "boolean" },
       "max-pages": { type: "string", short: "m" },
       verbose: { type: "boolean", short: "v" },
+      status: { type: "boolean" },
+      history: { type: "boolean" },
       help: { type: "boolean", short: "h" },
       version: { type: "boolean", short: "V" },
     },
@@ -130,8 +132,39 @@ const main = async () => {
   showBanner();
 
   const cliOptions = parseCliArgs();
-
   const vals = cliOptions as any;
+
+  // Handle status command
+  if (vals.status) {
+    const { getStats, queryHistory } = await import("./db/jobs");
+    const stats = getStats();
+    console.log(chalk.cyan("📊 Job Database Statistics"));
+    console.log(`  Total jobs tracked: ${stats.total}`);
+    console.log(`  New: ${stats.new || 0}`);
+    console.log(`  Seen: ${stats.seen || 0}`);
+    console.log(`  Applied: ${stats.applied || 0}`);
+    console.log(`  Saved: ${stats.saved || 0}`);
+    console.log(`  Rejected: ${stats.rejected || 0}`);
+    process.exit(0);
+  }
+
+  // Handle history command
+  if (vals.history) {
+    const { queryHistory } = await import("./db/jobs");
+    const jobs = queryHistory({ limit: 20 });
+    if (jobs.length === 0) {
+      console.log(chalk.yellow("No job history found. Run the scraper first."));
+    } else {
+      console.log(chalk.cyan("📋 Recent Job History"));
+      for (const j of jobs) {
+        const statusEmoji = j.status === 'applied' ? '✅' : j.status === 'saved' ? '⭐' : j.status === 'rejected' ? '❌' : '👀';
+        console.log(`  ${statusEmoji} ${j.title} @ ${j.company} [${j.status}] (score: ${j.matchScore})`);
+      }
+    }
+    process.exit(0);
+  }
+
+  const cliOpts = cliOptions as any;
   if (vals.help) {
     console.log(chalk.cyan("Usage:") + "\n  job-finder [options]\n");
     console.log(chalk.cyan("Core Filters:"));
@@ -149,6 +182,9 @@ const main = async () => {
     console.log("\n" + chalk.cyan("Advanced:"));
     console.log("  -s, --sources <list>      internshala,wellfound,web3career,...");
     console.log("  -m, --max-pages <n>       Max pages per source (default: 3)");
+    console.log("\n" + chalk.cyan("Database:"));
+    console.log("  --status                  Show job tracking statistics");
+    console.log("  --history                 Show recent job history");
     console.log("  -v, --verbose             Debug logging");
     console.log("  -h, --help                Show this help");
     process.exit(0);

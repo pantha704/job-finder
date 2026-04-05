@@ -9,6 +9,7 @@ import { scoreSkillsMatch } from "./filters/skills";
 import { normalizeSalary, matchesSalaryFilter, scoreSalaryMatch } from "./filters/salary";
 import { matchesCompanyFilter, scoreCompanyMatch } from "./filters/company";
 import { analyzeJobWithAI } from "./utils/llm_parser";
+import { findJob, upsertJobs, closeDb } from "./db/jobs";
 
 // Tier 1 Scrapers
 import { scrapeInternshala } from "./scrapers/internshala";
@@ -161,7 +162,7 @@ export const runFullPipeline = async (params: RunPipelineParams): Promise<Filter
           filteredJob.isHighMatch = true;
         }
 
-        // Dedup Check
+        // Dedup Check (in-memory + SQLite persistence)
         const dedupKey = generateDedupKey(filteredJob.company, filteredJob.title, filteredJob.application.url);
         if (dedupMap.has(dedupKey)) {
            // Overwrite if new has better score
@@ -169,6 +170,13 @@ export const runFullPipeline = async (params: RunPipelineParams): Promise<Filter
            if (filteredJob.matchScore > existing.matchScore) {
              dedupMap.set(dedupKey, filteredJob);
            }
+           continue;
+        }
+
+        // Check SQLite persistence for previously seen jobs
+        const persisted = findJob(dedupKey);
+        if (persisted && persisted.status === 'applied') {
+           // Skip jobs already marked as applied by the user
            continue;
         }
 
@@ -193,11 +201,28 @@ export const runFullPipeline = async (params: RunPipelineParams): Promise<Filter
       if (params.onSourceComplete) {
         params.onSourceComplete(source, sourceCount);
       }
+
+      // Persist batch to SQLite
+      if (batch.length > 0) {
+        upsertJobs(batch.map(job => ({
+          id: generateDedupKey(job.company, job.title, job.application.url),
+          title: job.title,
+          company: job.company,
+          applyUrl: job.application.url,
+          source: job.metadata.source,
+          firstSeen: job.metadata.scrapedAt.toISOString(),
+          lastSeen: job.metadata.scrapedAt.toISOString(),
+          status: 'new' as const,
+          matchScore: job.matchScore,
+          isHighMatch: job.isHighMatch,
+        })));
+      }
     } catch (err) {
       logger.error({ err }, `Error scraping ${source}`);
     }
   }
 
+  closeDb();
   return Array.from(dedupMap.values());
 };
 
